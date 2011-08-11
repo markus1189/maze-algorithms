@@ -1,0 +1,25 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Maze	lib/maze.rb	/^class Maze$/;"	c
+MazeGenerator	lib/maze_generator.rb	/^class MazeGenerator$/;"	c
+MazeSolver	lib/maze_solver.rb	/^class MazeSolver$/;"	c
+[]	lib/maze.rb	/^  def [](x, y)$/;"	f	class:Maze
+area	lib/maze.rb	/^  def area$/;"	f	class:Maze
+calc_dir	lib/maze.rb	/^  def calc_dir(from, to)$/;"	f	class:Maze
+carve_wall	lib/maze.rb	/^  def carve_wall(from, to)$/;"	f	class:Maze
+check_points	lib/maze.rb	/^  def check_points(from, to)$/;"	f	class:Maze
+dfs	lib/maze_generator.rb	/^  def self.dfs(maze)$/;"	F	class:MazeGenerator
+generate	lib/maze_generator.rb	/^  def self.generate(algorithm, maze)$/;"	F	class:MazeGenerator
+generate_path	lib/maze_solver.rb	/^  def self.generate_path(preds, target)$/;"	F
+has_wall_between?	lib/maze.rb	/^  def has_wall_between?(p1, p2)$/;"	f	class:Maze
+initialize	lib/maze.rb	/^  def initialize(width, height)$/;"	f	class:Maze
+move_coords	lib/maze.rb	/^  def move_coords(x, y, direction)$/;"	f	class:Maze
+recursive_backtrack	lib/maze_generator.rb	/^  def self.recursive_backtrack(cx, cy, maze)$/;"	F	class:MazeGenerator
+solve	lib/maze_solver.rb	/^  def self.solve(maze, start = [0,0], target = [maze.width-1, maze.height-1])$/;"	F	class:MazeSolver
+to_s	lib/maze.rb	/^  def to_s$/;"	f	class:Maze
+valid_coords?	lib/maze.rb	/^  def valid_coords?(x, y)$/;"	f	class:Maze
+visited?	lib/maze.rb	/^  def visited?(x, y)$/;"	f	class:Maze
