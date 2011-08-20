@@ -1,15 +1,24 @@
 #!/usr/bin/env ruby -wKU
 # Author: markus1189@gmail.com
 
+require_relative 'maze.rb'
+require_relative 'ellers_algorithm'
+require 'set'
+
 class MazeGenerator
 
-  def self.generate(algorithm, maze)
+  def self.generate(algorithm, width, height)
+    maze = Maze.new(width, height)
+
     case algorithm
     when /r(ecursive)?(_)?b(acktrack)?(ing)?/
       return "width or size too big for recursion!" if maze.area > 5000
       recursive_backtrack(maze)
     when /d(epth)?(_)?f(irst)?(_)?s(earch)?/
       depth_first_search(maze)
+    when /ellers(_)?(algorithm)?/
+      e = EllersAlgorithm.new(maze)
+      e.generate
     else
       raise "Unknown algorithm: #{algorithm}"
     end
@@ -63,5 +72,4 @@ class MazeGenerator
   class << self
     alias_method :dfs, :depth_first_search
   end
-
 end

@@ -52,6 +52,7 @@ class Maze
 
     nil
   end
+  alias_method :connect, :carve_wall
 
   # Given two points, determines the necessary direction to get from the first to the second
   # from and two should be ARRAYS
@@ -145,10 +146,23 @@ class Maze
     from_x, from_y = *from
     to_x, to_y     = *to
 
-    raise "Invalid coords: #{from}" unless valid_coords?(*from)
-    raise "Invalid coords: #{to}"   unless valid_coords?(*to)
+    p self unless valid_coords?(*from) || valid_coords?(*to)
+    raise "Invalid coords(from): #{from}" unless valid_coords?(*from)
+    raise "Invalid coords(to): #{to}"   unless valid_coords?(*to)
 
     raise "Points have to be adjacent" unless (-1..1) === (from_x - to_x + from_y - to_y)
+  end
+
+  def each_row &block
+    raise "Give me a block" unless block_given?
+
+    @grid.each do |row|
+      yield(row)
+    end
+  end
+
+  def get_row(y)
+    return @grid[y]
   end
 
   def area
@@ -156,7 +170,11 @@ class Maze
   end
 
   def [](x, y)
-    @grid[y][x]
+    x ? @grid[y][x] : @grid[y]
+  end
+
+  def []=(x,y,value)
+    x ? @grid[y][x]=value : @grid[y]=value
   end
 
 end
