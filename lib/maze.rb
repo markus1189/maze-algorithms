@@ -166,11 +166,11 @@ class Maze
   end
 
   def area
-    @width*@height
+    @area ||= @width*@height
   end
 
   def [](x, y)
-    x ? @grid[y][x] : @grid[y]
+    @grid[y][x]
   end
 
   def []=(x,y,value)

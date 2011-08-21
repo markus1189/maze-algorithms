@@ -74,11 +74,6 @@ describe Maze do
       @maze[0,0].should_not == 0
     end
 
-    it "should return the complete row if x-coord is false" do
-      @maze[false, 0].should == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      @maze[false, 0].should == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    end
-
   end
 
   context "when using []= operator" do
