@@ -33,13 +33,17 @@ initialize	lib/ellers_algorithm.rb	/^  def initialize(maze)$/;"	f	class:EllersAl
 initialize	lib/maze.rb	/^  def initialize(width, height)$/;"	f	class:Maze
 join_adjacent_disjoint	lib/ellers_algorithm.rb	/^  def join_adjacent_disjoint(row)$/;"	f
 merge	lib/buckblogs_eller.rb	/^  def merge(sink_cell, target_cell)$/;"	f	class:State
+merge!	lib/maze.rb	/^  def merge!(other_maze)$/;"	f	class:Maze
 move_coords	lib/maze.rb	/^  def move_coords(x, y, direction)$/;"	f	class:Maze
 next	lib/buckblogs_eller.rb	/^  def next$/;"	f	class:State
+points_adjacent?	lib/maze.rb	/^  def points_adjacent?(x1, y1, x2, y2)$/;"	f	class:Maze
 populate	lib/buckblogs_eller.rb	/^  def populate$/;"	f	class:State
 random_join	lib/ellers_algorithm.rb	/^  def random_join(row, y)$/;"	f	class:EllersAlgorithm
 recursive_backtrack	lib/maze_generator.rb	/^  def self.recursive_backtrack(maze, cx=rand(maze.width), cy=rand(maze.height))$/;"	F	class:MazeGenerator
+row2str	lib/buckblogs_eller.rb	/^def row2str(row, last=false)$/;"	f
 same?	lib/buckblogs_eller.rb	/^  def same?(cell1, cell2)$/;"	f	class:State
 solve	lib/maze_solver.rb	/^  def self.solve(maze, start = [0,0], target = [maze.width-1, maze.height-1])$/;"	F	class:MazeSolver
+step	lib/buckblogs_eller.rb	/^def step(state, finish=false)$/;"	f
 to_s	lib/maze.rb	/^  def to_s$/;"	f	class:Maze
 valid_coords?	lib/maze.rb	/^  def valid_coords?(x, y)$/;"	f	class:Maze
 valid_different_sets_and_coin	lib/ellers_algorithm.rb	/^  def valid_different_sets_and_coin(new_x, x)$/;"	f

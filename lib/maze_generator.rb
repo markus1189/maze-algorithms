@@ -9,6 +9,7 @@ class MazeGenerator
 
   def self.generate(algorithm, width, height)
     maze = Maze.new(width, height)
+    maze2 = Maze.new(width, height)
 
     case algorithm
     when /r(ecursive)?(_)?b(acktrack)?(ing)?/
@@ -16,14 +17,15 @@ class MazeGenerator
       recursive_backtrack(maze)
     when /d(epth)?(_)?f(irst)?(_)?s(earch)?/
       depth_first_search(maze)
-    when /ellers(_)?(algorithm)?/
+      depth_first_search(maze2)
+    when /eller(s)?(_)?(algorithm)?/
       e = EllersAlgorithm.new(maze)
       e.generate
     else
       raise "Unknown algorithm: #{algorithm}"
     end
 
-    maze
+    return maze.merge! maze2
   end
 
   def self.recursive_backtrack(maze, cx=rand(maze.width), cy=rand(maze.height))

@@ -147,10 +147,15 @@ class Maze
     to_x, to_y     = *to
 
     p self unless valid_coords?(*from) || valid_coords?(*to)
-    raise "Invalid coords(from): #{from}" unless valid_coords?(*from)
-    raise "Invalid coords(to): #{to}"   unless valid_coords?(*to)
 
-    raise "Points have to be adjacent" unless (-1..1) === (from_x - to_x + from_y - to_y)
+    raise "Invalid coords(from): #{from}" unless valid_coords?(*from)
+    raise "Invalid coords(to): #{to}"     unless valid_coords?(*to)
+
+    raise "Points have to be adjacent" unless points_adjacent?(from_x, from_y, to_x, to_y)
+  end
+
+  def points_adjacent?(x1, y1, x2, y2)
+    (-1..1) === (x1 - x2 + y1 - y2)
   end
 
   def each_row &block
@@ -175,6 +180,20 @@ class Maze
 
   def []=(x,y,value)
     x ? @grid[y][x]=value : @grid[y]=value
+  end
+
+  def merge!(other_maze)
+    raise ArgumentError, "Can only add another maze" unless other_maze.class == Maze
+    raise ArgumentError, "The mazes must have the same width" unless other_maze.width == width
+
+    other_maze.each_row do |row|
+      @grid << row
+      puts "#{@height} yop"
+      @height += other_maze.height
+      puts "#{@height} yop"
+    end
+
+    self
   end
 
 end

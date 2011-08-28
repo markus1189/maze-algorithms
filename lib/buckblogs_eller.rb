@@ -1,4 +1,4 @@
- # --------------------------------------------------------------------
+# --------------------------------------------------------------------
 # Eller's algorithm for maze generation. Novel in that it only
 # requires memory proportional to the size of a single row; this means
 # you can generate "bottomless" mazes with it, that just keep going
