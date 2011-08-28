@@ -33,6 +33,10 @@ class Maze
     @grid = Array.new(@height) { Array.new(@width, 0) }
   end
 
+  def directions
+    MOVES.keys
+  end
+
   # Given a start and dest point, carves the wall between them
   # Note: does NOT check the coords for performance
   # Example:
