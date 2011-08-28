@@ -1,9 +1,5 @@
-#!/usr/bin/env ruby -wKU
+require 'spec_helper'
 # Author: markus1189@gmail.com
-
-$: << File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib')
-
-require 'maze'
 
 describe Maze do
   before(:each) do

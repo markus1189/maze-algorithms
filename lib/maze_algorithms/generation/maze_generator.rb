@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby -wKU
 # Author: markus1189@gmail.com
 
-require_relative 'maze.rb'
-require_relative 'ellers_algorithm'
 require 'set'
 
 class MazeGenerator

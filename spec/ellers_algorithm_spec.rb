@@ -1,10 +1,5 @@
-#!/usr/bin/env ruby -wKU
+require 'spec_helper'
 # Author: markus1189@gmail.com
-
-$: << File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib')
-
-require 'ellers_algorithm'
-require 'maze'
 
 describe "Ellers algorithm" do
   context "when using random_join method" do
