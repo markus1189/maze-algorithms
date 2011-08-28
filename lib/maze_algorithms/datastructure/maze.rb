@@ -2,7 +2,7 @@
 # Author: markus1189@gmail.com
 
 class Maze
-  attr_reader :width, :height, :directions
+  attr_reader :width, :height
   attr_accessor :path
 
   FLAGS = {
@@ -29,21 +29,17 @@ class Maze
   def initialize(width, height)
     @width      = width
     @height     = height
-    @directions = MOVES.keys
-
-    @path = nil
 
     @grid = Array.new(@height) { Array.new(@width, 0) }
   end
 
   # Given a start and dest point, carves the wall between them
+  # Note: does NOT check the coords for performance
   # Example:
   #   carve_wall([3,3],[3,4]) # => nil
   def carve_wall(from, to)
     from_x, from_y = *from
     to_x, to_y     = *to
-
-    check_points(from, to)
 
     direction = calc_dir(from, to)
 
@@ -63,8 +59,6 @@ class Maze
   def calc_dir(from, to)
     from_x, from_y = *from
     to_x, to_y     = *to
-
-    check_points(from, to)
 
     if from_y == to_y
       return :E if from_x - to_x == -1
@@ -91,7 +85,10 @@ class Maze
   end
 
   def valid_coords?(x, y)
-    (0...@width) === x && (0...@height) === y
+    valid = true
+    valid &&= (x >= 0 && x < @width)
+    valid &&= (y >= 0 && y < @height)
+    return valid
   end
 
   def visited?(x, y)
@@ -99,8 +96,6 @@ class Maze
   end
 
   def has_wall_between?(p1, p2)
-    check_points(p1, p2)
-
     dir = calc_dir(p1, p2)
 
     from_p1 = @grid[p1[1]][p1[0]] & FLAGS[dir]
@@ -133,30 +128,6 @@ class Maze
     result << ("+---" * @width) + "+\n"
   end
   alias_method :to_str, :to_s
-
-  # Checks the given points:
-  #   - whether they are out of bounds
-  #   - whether they are adjacent
-  #
-  # Example:
-  #   check_points([0,0], [0,1])  # => okay
-  #   check_points([0,0], [0,2])  # => Error (not adjacent)
-  #   check_points([0,-1], [0,0]) # => Error (out of bounds)
-  def check_points(from, to)
-    from_x, from_y = *from
-    to_x, to_y     = *to
-
-    p self unless valid_coords?(*from) || valid_coords?(*to)
-
-    raise "Invalid coords(from): #{from}" unless valid_coords?(*from)
-    raise "Invalid coords(to): #{to}"     unless valid_coords?(*to)
-
-    raise "Points have to be adjacent" unless points_adjacent?(from_x, from_y, to_x, to_y)
-  end
-
-  def points_adjacent?(x1, y1, x2, y2)
-    (-1..1) === (x1 - x2 + y1 - y2)
-  end
 
   def each_row &block
     raise "Give me a block" unless block_given?
