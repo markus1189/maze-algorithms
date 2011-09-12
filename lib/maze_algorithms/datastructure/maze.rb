@@ -123,23 +123,15 @@ module MazeAlgorithms
           else
             result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
           end
-          result << "+\n"
-          @width.times do |x|
-            if x == 0
-              result << "|"
-            else
-              result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
-            end
-            if @path
-              result << (@path.include?([x,y]) ? " * " : "   ")
-            else
-              result << "   "
-            end
+          if @path
+            result << (@path.include?([x,y]) ? " * " : "   ")
+          else
+            result << "   "
           end
-          result << "|\n"
         end
-        result << ("+---" * @width) + "+\n"
+        result << "|\n"
       end
+      result << ("+---" * @width) + "+\n"
     end
     alias_method :to_str, :to_s
 
