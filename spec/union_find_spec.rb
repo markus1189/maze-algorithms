@@ -5,18 +5,21 @@ describe "UnionFind" do
     before(:each) do
       @unions = []
 
-      @unions << UnionFind.new(%w{a b c d e f})
+      @unions << MazeGeneration::UnionFind.new(%w{a b c d e f})
+      @unions << MazeGeneration::UnionFind.new([1,2,3,4,5,6])
+      @unions << MazeGeneration::UnionFind.new([[1],[2],[3],[4],[5],[6]])
+      @unions << MazeGeneration::UnionFind.new([:one,:two,:three,:four])
     end
 
     it "should assign the entries correctly in a unique set" do
-      @unions.each do |union|
+      apply_to_all do |union|
         sets = union.elements.inject([]) { |mem, elem| mem << union.find(elem) }
         sets.size.should == union.elements.size
       end
     end
 
     it "should be able to merge" do
-      @unions.each do |union|
+      apply_to_all do |union|
         one, two = union.elements.take(2)
 
         union.union(one, two)
@@ -25,6 +28,35 @@ describe "UnionFind" do
 
         union.find(one).should == union.find(two)
       end
+    end
+
+    it "should correctly determine if elements are in the same set" do
+      apply_to_all do |union|
+        one, two = union.elements.take(2)
+
+        union.same_set?(one).should be_true
+        union.same_set?(one,one).should be_true
+
+        union.same_set?(one,two).should be_false
+        union.union(one, two)
+        union.same_set?(one, two).should be_true
+      end
+    end
+
+    it "should raise an error if the element is not found" do
+      apply_to_all do |union|
+        expect {
+          union.union("does not exists", union.elements.first)
+        }.to raise_error( ArgumentError, /^Unknown/)
+        expect {
+          union.union(union.elements.first, "does not exists")
+        }.to raise_error( ArgumentError, /^Unknown/)
+      end
+    end
+
+    def apply_to_all(&block)
+      return unless block_given?
+      @unions.each { |union| yield(union) }
     end
   end
 end
