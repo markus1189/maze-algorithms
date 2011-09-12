@@ -88,5 +88,34 @@ describe Maze do
     end
   end
 
+  context "when comparing and combining mazes" do
+    it "should be comparable to other mazes via ==" do
+      maze1 = Maze.new(5,5)
+      maze2 = Maze.new(5,5)
+      maze3 = Maze.new(42,42)
+
+      maze1.should == maze2
+      maze2.should == maze1
+
+      maze1.should_not == maze3
+      maze2.should_not == maze3
+    end
+
+    it "should append the second maze below the first using merge!" do
+      maze1 = Maze.new(5,37)
+      maze2 = Maze.new(5,5)
+      resulting_maze = Maze.new(5,42)
+
+      maze1.merge!(maze2)
+      maze1.width.should  == 5
+      maze1.height.should == 42
+
+      maze2.width.should  == 5
+      maze2.height.should == 5
+
+      maze1.should == resulting_maze
+    end
+  end
+
 end
 

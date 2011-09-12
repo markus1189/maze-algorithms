@@ -110,6 +110,7 @@ class Maze
 
   def to_s
     result = ''
+    result << "\n"
     @height.times do |y|
       @width.times do |x|
         result << "+" << ((@grid[y][x] & FLAGS[:N] == 0) ? "---" : "   ")
@@ -162,13 +163,27 @@ class Maze
     raise ArgumentError, "The mazes must have the same width" unless other_maze.width == width
 
     other_maze.each_row do |row|
-      @grid << row
-      puts "#{@height} yop"
-      @height += other_maze.height
-      puts "#{@height} yop"
+      @grid << row.clone
     end
 
+    @height += other_maze.height
+
     self
+  end
+  alias_method :<<, :merge!
+
+  def ==(other)
+    result = true
+    result &&= @width == other.width
+    result &&= @height == other.height
+
+    (0...height).each do |y|
+      (0...width).each do |x|
+        return false if self[x,y] != other[x,y]
+      end
+    end if result
+
+    result
   end
 
 end
