@@ -1,6 +1,6 @@
 require 'set'
 
-module MazeGeneration
+module MazeAlgorithms
   class UnionFind
     def initialize(elems)
       @next_set = 0
