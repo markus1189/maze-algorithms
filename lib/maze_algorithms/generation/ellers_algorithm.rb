@@ -23,7 +23,7 @@ class Array
   end
 end
 
-module MazeGeneration
+module MazeAlgorithms
   class EllersAlgorithm
     attr_reader :set
 

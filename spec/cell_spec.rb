@@ -5,7 +5,7 @@ describe "Cell" do
   context "when calling dynamically defined methods" do
 
     before(:each) do
-      @cell = Cell.new
+      @cell = MazeAlgorithms::Cell.new
     end
 
     it "should respond correctly to all four directions's reader/writer" do

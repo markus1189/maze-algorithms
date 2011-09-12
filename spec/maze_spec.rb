@@ -1,9 +1,9 @@
 require 'spec_helper'
 # Author: markus1189@gmail.com
 
-describe Maze do
+describe "Maze" do
   before(:each) do
-    @maze = Maze.new(20, 10)
+    @maze = MazeAlgorithms::Maze.new(20, 10)
   end
 
   it "should have the given width and height" do
