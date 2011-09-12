@@ -109,19 +109,12 @@ module MazeAlgorithms
       return from_p1 == 0 && from_p2 == 0
     end
 
-  def to_s
-    result = ''
-    result << "\n"
-    @height.times do |y|
-      @width.times do |x|
-        result << "+" << ((@grid[y][x] & FLAGS[:N] == 0) ? "---" : "   ")
-      end
-      result << "+\n"
-      @width.times do |x|
-        if x == 0
-          result << "|"
-        else
-          result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
+    def to_s
+      result = ''
+      result << "\n"
+      @height.times do |y|
+        @width.times do |x|
+          result << "+" << ((@grid[y][x] & FLAGS[:N] == 0) ? "---" : "   ")
         end
         result << "+\n"
         @width.times do |x|
@@ -130,15 +123,23 @@ module MazeAlgorithms
           else
             result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
           end
-          if @path
-            result << (@path.include?([x,y]) ? " * " : "   ")
-          else
-            result << "   "
+          result << "+\n"
+          @width.times do |x|
+            if x == 0
+              result << "|"
+            else
+              result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
+            end
+            if @path
+              result << (@path.include?([x,y]) ? " * " : "   ")
+            else
+              result << "   "
+            end
           end
+          result << "|\n"
         end
-        result << "|\n"
+        result << ("+---" * @width) + "+\n"
       end
-      result << ("+---" * @width) + "+\n"
     end
     alias_method :to_str, :to_s
 
@@ -170,28 +171,28 @@ module MazeAlgorithms
       raise ArgumentError, "Can only add another maze" unless other_maze.class == Maze
       raise ArgumentError, "The mazes must have the same width" unless other_maze.width == width
 
-    other_maze.each_row do |row|
-      @grid << row.clone
-    end
-
-    @height += other_maze.height
-
-    self
-  end
-  alias_method :<<, :merge!
-
-  def ==(other)
-    result = true
-    result &&= @width == other.width
-    result &&= @height == other.height
-
-    (0...height).each do |y|
-      (0...width).each do |x|
-        return false if self[x,y] != other[x,y]
+      other_maze.each_row do |row|
+        @grid << row.clone
       end
-    end if result
 
-    result
+      @height += other_maze.height
+
+      self
+    end
+    alias_method :<<, :merge!
+
+    def ==(other)
+      result = true
+      result &&= @width == other.width
+      result &&= @height == other.height
+
+      (0...height).each do |y|
+        (0...width).each do |x|
+          return false if self[x,y] != other[x,y]
+        end
+      end if result
+
+      result
+    end
   end
-
 end
