@@ -25,65 +25,7 @@ class Array
   end
 end
 
-module MazeGeneration
-  class EllersState
-    attr_reader :size
-
-    def initialize(size)
-      @size = size
-      @content = Array.new(size) { |i| [i] }
-      @sets = {}
-    end
-
-    def random_join
-      if coin(true,false)
-        @content[0].concat(@content[1])
-        @content.delete_at(1)
-      end
-
-      i = 1
-      while i <= @content.size-2 do
-        if coin(true,false)
-          @content[i-1].concat(@content[i])
-          @content.delete_at(i)
-          next
-        end
-        if coin(true,false)
-          @content[i].concat(@content[i+1])
-          @content.delete_at(i+1)
-          i+=1
-        end
-      end
-
-      if coin(true,false)
-        @content[-2].concat(@content[-1])
-        @content.delete_at(-1)
-      end
-
-      @content.dup
-    end
-
-    def random_vertical
-      @content.each do |set_array|
-        (rand(set_array.size)+1).times do |i|
-          next if i == 0
-          set_array[rand(set_array.size)] = nil
-        end
-      end
-
-      @content.dup
-    end
-
-    def coin(*args)
-      args.sample
-    end
-
-    def num_of_sets
-      @content.uniq
-    end
-
-  end
-
+module MazeAlgorithms
   class EllersAlgorithm
     attr_reader :set
 

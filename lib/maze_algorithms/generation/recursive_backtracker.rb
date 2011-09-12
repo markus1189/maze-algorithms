@@ -1,4 +1,4 @@
-module MazeGeneration
+module MazeAlgorithms
   class RecursiveBacktracker
     def self.generate(maze, cx=rand(maze.width), cy=rand(maze.height))
       directions = maze.directions

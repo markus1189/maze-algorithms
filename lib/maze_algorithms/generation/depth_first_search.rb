@@ -1,4 +1,4 @@
-module MazeGeneration
+module MazeAlgorithms
   class DepthFirstSearch
     def self.generate(maze)
       stack = [[0,0]]
