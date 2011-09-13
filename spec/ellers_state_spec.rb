@@ -2,14 +2,15 @@ require 'spec_helper'
 
 describe "State for ellers algortihm" do
   context "when initialized" do
-
     it "should not lose cells after random_join" do
+      pending
       50.times do
         MazeGeneration::EllersState.new(9).random_join.flatten.size.should == 9
       end
     end
 
     it "should not create nil-arrays with random_veritcals" do
+      pending
       50.times do
         state = MazeGeneration::EllersState.new(9)
         state.random_join
