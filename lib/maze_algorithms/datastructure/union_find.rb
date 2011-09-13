@@ -2,6 +2,7 @@ require 'set'
 
 module MazeAlgorithms
   class UnionFind
+    attr_reader :set2elems
     def initialize(elems)
       @next_set = -1
       @elem2set_index = {}
@@ -95,6 +96,20 @@ module MazeAlgorithms
       result << "<#{self.class} | "
       result << "next_set: #{@next_set} | "
       result << "elements: #{elements}>"
+    end
+
+    def each_set(&blk)
+      return unless block_given?
+      @set2elems.each_value do |set|
+        yield set
+      end
+    end
+
+    def each_elem(&blk)
+      return unless block_given?
+      elements.each do |elem|
+        yield elem
+      end
     end
 
     private
