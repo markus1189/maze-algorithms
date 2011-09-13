@@ -119,7 +119,7 @@ module MazeAlgorithms
           else
             result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
           end
-          result << (@path.include?([x,y]) ? " * " : "   ") unless @path.empty?
+          result << (@path.include?([x,y]) ? " * " : "   ")
         end
         result << "|\n"
       end
@@ -178,8 +178,8 @@ module MazeAlgorithms
     end
 
     def clone
-      a_clone = new(@width, @height)
-      self.each { |cell| a_clone[x,y] = cell.clone }
+      a_clone = self.class.new(@width, @height)
+      self.each { |cell, x, y| a_clone[x,y] = cell }
       a_clone.path = @path.clone if @path
 
       a_clone
