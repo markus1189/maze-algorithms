@@ -44,19 +44,17 @@ module MazeAlgorithms
       @elem2set_index[elem]
     end
 
-    def reassign(*elems)
-      elems.each do |elem|
-        unless elems.any? { |e| @elem2set_index[e] }
-          raise ArgumentError, "Element not found: #{e}"
-        end
-        old_set = @elem2set_index[elem]
-        new_set = get_new_set
-
-        @set2elems[old_set].subtract([elem])
-
-        @elem2set_index[elem] = new_set
-        @set2elems[new_set] = Set.new([elem])
+    def reassign(elem)
+      unless @elem2set_index[elem]
+        raise ArgumentError, "Element not found: #{elem}"
       end
+      old_set = @elem2set_index[elem]
+      new_set = get_new_set
+
+      @set2elems[old_set].subtract([elem])
+
+      @elem2set_index[elem] = new_set
+      @set2elems[new_set] = Set.new([elem])
       compact!
     end
 
