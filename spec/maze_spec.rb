@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby -w
 require 'spec_helper'
 # Author: markus1189@gmail.com
 
@@ -7,17 +8,17 @@ describe "Maze" do
   end
 
   it "should have the given width and height" do
-    @maze.width.should  == 20
-    @maze.height.should == 10
+    @maze.width.should eq(20)
+    @maze.height.should eq(10)
   end
 
   context "when using calc_dir" do
 
     it "should calculate the dir between two coordinates" do
-      @maze.calc_dir([5,5],[5,4]).should == :N
-      @maze.calc_dir([5,5],[5,6]).should == :S
-      @maze.calc_dir([5,5],[4,5]).should == :W
-      @maze.calc_dir([5,5],[6,5]).should == :E
+      @maze.calc_dir([5,5],[5,4]).should eq(:N)
+      @maze.calc_dir([5,5],[5,6]).should eq(:S)
+      @maze.calc_dir([5,5],[4,5]).should eq(:W)
+      @maze.calc_dir([5,5],[6,5]).should eq(:E)
     end
 
     it "should raise an error if the points are not neighbours or invalid" do
@@ -31,10 +32,10 @@ describe "Maze" do
   context "when move_coords used" do
 
     it "should move the two given coords if possible" do
-      @maze.move_coords(5,5, :N).should == [5,4]
-      @maze.move_coords(5,5, :S).should == [5,6]
-      @maze.move_coords(5,5, :W).should == [4,5]
-      @maze.move_coords(5,5, :E).should == [6,5]
+      @maze.move_coords(5,5, :N).should eq([5,4])
+      @maze.move_coords(5,5, :S).should eq([5,6])
+      @maze.move_coords(5,5, :W).should eq([4,5])
+      @maze.move_coords(5,5, :E).should eq([6,5])
     end
 
     it "should return nil if moving is not possible" do
@@ -66,10 +67,10 @@ describe "Maze" do
   context "when using [] operator" do
 
     it "should get the corresponding cell" do
-      @maze[0,0].should == 0
+      @maze[0,0].should eq(0)
       @maze.carve_wall([0,0],[0,1])
       @maze.carve_wall([0,0],[1,0])
-      @maze[0,0].should_not == 0
+      @maze[0,0].should_not eq(0)
     end
 
   end
@@ -77,13 +78,13 @@ describe "Maze" do
   context "when using []= operator" do
     it "should be able to set values" do
       @maze[0,0] = 5
-      @maze[0,0].should == 5
+      @maze[0,0].should eq(5)
 
       @maze[0,0] += 3
-      @maze[0,0].should == 8
+      @maze[0,0].should eq(8)
 
       @maze[0,0] &= 0
-      @maze[0,0].should == 0
+      @maze[0,0].should eq(0)
 
     end
   end
@@ -94,11 +95,11 @@ describe "Maze" do
       maze2 =MazeAlgorithms::Maze.new(5,5)
       maze3 =MazeAlgorithms::Maze.new(42,42)
 
-      maze1.should == maze2
-      maze2.should == maze1
+      maze1.should eq(maze2)
+      maze2.should eq(maze1)
 
-      maze1.should_not == maze3
-      maze2.should_not == maze3
+      maze1.should_not eq(maze3)
+      maze2.should_not eq(maze3)
     end
 
     it "should append the second maze below the first using merge!" do
@@ -107,13 +108,13 @@ describe "Maze" do
       resulting_maze =MazeAlgorithms::Maze.new(5,42)
 
       maze1.merge!(maze2)
-      maze1.width.should  == 5
-      maze1.height.should == 42
+      maze1.width.should  eq(5)
+      maze1.height.should eq(42)
 
-      maze2.width.should  == 5
-      maze2.height.should == 5
+      maze2.width.should  eq(5)
+      maze2.height.should eq(5)
 
-      maze1.should == resulting_maze
+      maze1.should eq(resulting_maze)
     end
   end
 
