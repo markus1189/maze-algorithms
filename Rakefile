@@ -5,12 +5,14 @@ require 'rake/testtask'
 task :default => [:ctags, :test_all]
 
 desc "Run Rspecs"
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec) do |t|
+  #ruby_opts = "-w" TODO how to enable warings?
+end
 
 desc "Run the unit tests in test/unit"
 Rake::TestTask.new('test') do |t|
   t.pattern = 'test/**/*_test.rb'
-  t.warning, t.verbose = true, true
+  t.warning = true
 end
 
 desc "Test Rspec and Unit"

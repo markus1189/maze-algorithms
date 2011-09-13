@@ -1,6 +1,3 @@
-#!/usr/bin/env ruby -wKU
-# Author: markus1189@gmail.com
-
 module MazeAlgorithms
   class Maze
     attr_reader :width, :height
@@ -28,9 +25,8 @@ module MazeAlgorithms
     }
 
     def initialize(width, height)
-      @width      = width
-      @height     = height
-
+      @width, @height = width, height
+      @path = []
       @grid = Array.new(@height) { Array.new(@width, 0) }
     end
 
@@ -123,11 +119,7 @@ module MazeAlgorithms
           else
             result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
           end
-          if @path
-            result << (@path.include?([x,y]) ? " * " : "   ")
-          else
-            result << "   "
-          end
+          result << (@path.include?([x,y]) ? " * " : "   ") unless @path.empty?
         end
         result << "|\n"
       end
@@ -178,13 +170,29 @@ module MazeAlgorithms
       result &&= @width == other.width
       result &&= @height == other.height
 
-      (0...height).each do |y|
-        (0...width).each do |x|
-          return false if self[x,y] != other[x,y]
+      if result
+        self.each do |cell, x, y|
+          return false if (other[x,y] != cell)
         end
-      end if result
+      end
 
       result
+    end
+
+    def clone
+      a_clone = new(@width, @height)
+      self.each { |cell| a_clone[x,y] = cell }
+      a_clone.path = @path if @path
+
+      a_clone
+    end
+
+    def each(&blk)
+      (0...height).each do |y|
+        (0...width).each do |x|
+          yield(self[x,y], x, y)
+        end
+      end
     end
   end
 end
