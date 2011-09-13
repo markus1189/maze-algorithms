@@ -54,6 +54,21 @@ describe "UnionFind" do
       end
     end
 
+    it "should be able to automatically reassign elements" do
+      apply_to_all do |union|
+        rnd = rand(union.elements.size)
+
+        set_before = union.find(union.elements[rnd])
+        elems_before = union.elements
+        union.reassign(union.elements[rnd])
+        set_after = union.find(union.elements[rnd])
+        elems_after = union.elements
+
+        set_before.should_not eq(set_after)
+        elems_before.should eq(elems_after)
+      end
+    end
+
     def apply_to_all(&block)
       return unless block_given?
       @unions.each { |union| yield(union) }

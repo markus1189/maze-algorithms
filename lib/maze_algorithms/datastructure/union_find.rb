@@ -3,14 +3,14 @@ require 'set'
 module MazeAlgorithms
   class UnionFind
     def initialize(elems)
-      @next_set = 0
+      @next_set = -1
       @elem2set_index = {}
       @set2elems = Hash.new { |hsh, key| hsh[key] = Set.new }
 
       elems.each do |elem|
+        @next_set += 1
         @elem2set_index[elem] = @next_set
         @set2elems[@next_set] << elem
-        @next_set += 1
       end
     end
 
@@ -43,6 +43,31 @@ module MazeAlgorithms
       @elem2set_index[elem]
     end
 
+    def reassign(*elems)
+      elems.each do |elem|
+        unless elems.any? { |e| @elem2set_index[e] }
+          raise ArgumentError, "Element not found: #{e}"
+        end
+        old_set = @elem2set_index[elem]
+        new_set = get_new_set
+
+        @set2elems[old_set].subtract([elem])
+
+        @elem2set_index[elem] = new_set
+        @set2elems[new_set] = Set.new([elem])
+      end
+      compact!
+    end
+
+    def get_new_set
+      @next_set += 1
+    end
+
+    def compact!
+      @set2elems.delete_if { |k, v| v.empty? }
+      self
+    end
+
     def elements
       @elem2set_index.keys
     end
@@ -72,7 +97,7 @@ module MazeAlgorithms
       result << "elements: #{elements}>"
     end
 
-
+    private
 
     def check_present(*elems)
       elems.each do |elem|
@@ -80,6 +105,5 @@ module MazeAlgorithms
       end
       elems
     end
-    private :check_present
   end
 end
