@@ -144,11 +144,15 @@ module MazeAlgorithms
     end
 
     def [](x, y)
+      x > 0 ? x : @width  + x
+      y > 0 ? y : @height + y
       @grid[y][x]
     end
 
     def []=(x,y,value)
-      x ? @grid[y][x]=value : @grid[y]=value
+      x > 0 ? x : @width  + x
+      y > 0 ? y : @height + y
+      @grid[y][x] = value
     end
 
     def merge!(other_maze)

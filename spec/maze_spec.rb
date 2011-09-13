@@ -19,6 +19,11 @@ describe "Maze" do
       @maze.calc_dir([5,5],[5,6]).should eq(:S)
       @maze.calc_dir([5,5],[4,5]).should eq(:W)
       @maze.calc_dir([5,5],[6,5]).should eq(:E)
+
+      @maze.calc_dir([-5,-5],[-5,-6]).should eq(:N)
+      @maze.calc_dir([-5,-5],[-5,-4]).should eq(:S)
+      @maze.calc_dir([-5,-5],[-6,-5]).should eq(:W)
+      @maze.calc_dir([-5,-5],[-4,-5]).should eq(:E)
     end
 
     it "should raise an error if the points are not neighbours or invalid" do
@@ -71,6 +76,16 @@ describe "Maze" do
       @maze.carve_wall([0,0],[0,1])
       @maze.carve_wall([0,0],[1,0])
       @maze[0,0].should_not eq(0)
+    end
+
+    it "should be allowed to use negative indexes" do
+      10.times do
+        rnd_x = rand(@maze.width-1)
+        rnd_y = rand(@maze.height-1)
+        @maze.carve_wall([rnd_x,rnd_y],[rnd_x,rnd_y+1])
+
+        @maze[rnd_x, rnd_y].should eq( @maze[rnd_x-@maze.width,rnd_y-@maze.height])
+      end
     end
 
   end
