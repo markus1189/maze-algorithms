@@ -47,7 +47,7 @@ module MazeAlgorithms
       @grid[from_y][from_x] |= FLAGS[direction]
       @grid[to_y][to_x]     |= FLAGS[OPPOSITE[direction]]
 
-      nil
+      self
     end
     alias_method :connect, :carve_wall
 
@@ -166,23 +166,21 @@ module MazeAlgorithms
     alias_method :<<, :merge!
 
     def ==(other)
-      result = true
-      result &&= @width == other.width
-      result &&= @height == other.height
+      return false if other.class != self.class
+      return false if @width  != other.width
+      return false if @height != other.height
 
-      if result
-        self.each do |cell, x, y|
-          return false if (other[x,y] != cell)
-        end
+      self.each do |cell, x, y|
+        return false if (other[x,y] != cell)
       end
 
-      result
+      true
     end
 
     def clone
       a_clone = new(@width, @height)
-      self.each { |cell| a_clone[x,y] = cell }
-      a_clone.path = @path if @path
+      self.each { |cell| a_clone[x,y] = cell.clone }
+      a_clone.path = @path.clone if @path
 
       a_clone
     end
