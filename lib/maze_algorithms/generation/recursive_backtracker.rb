@@ -1,6 +1,8 @@
 module MazeAlgorithms
   class RecursiveBacktracker
-    def self.generate(maze, cx=rand(maze.width), cy=rand(maze.height))
+    def self.generate(width, height,
+                      cx=rand(width), cy=rand(height))
+      maze = Maze.new(width, height)
       directions = maze.directions
       directions.shuffle!
 
