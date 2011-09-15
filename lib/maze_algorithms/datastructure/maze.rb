@@ -1,5 +1,6 @@
 module MazeAlgorithms
   class Maze
+    include Enumerable
     attr_reader :width, :height
     attr_accessor :path
 
