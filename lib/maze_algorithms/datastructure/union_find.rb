@@ -1,18 +1,42 @@
 require 'set'
 
 module MazeAlgorithms
+  class Node
+    attr_accessor :parent
+    attr_reader :key
+
+    def initialize(key)
+      @key = key
+      @parent = nil
+    end
+
+    def root
+      @parent ? @parent.root : self
+    end
+
+    def connected?(other)
+      root == other.root
+    end
+
+    def connect(other)
+      root.parent = other
+    end
+
+    def self.to_proc
+      lambda { |arg|  new(arg) }
+    end
+
+    def to_s
+      "<#{@key}|#{@parent}>"
+    end
+  end
+
   class UnionFind
     attr_reader :set2elems
     def initialize(elems)
-      @next_set = -1
-      @elem2set_index = {}
-      @set2elems = Hash.new { |hsh, key| hsh[key] = Set.new }
+      @elem2node = {}
 
-      elems.each do |elem|
-        @next_set += 1
-        @elem2set_index[elem] = @next_set
-        @set2elems[@next_set] << elem
-      end
+      elems.each { |elem| @elem2node[elem] = Node.new(elem) }
     end
 
     # Merges the elements of source into target
@@ -22,15 +46,7 @@ module MazeAlgorithms
     #   union(set1, set2) # => set1 contains (set1 union set2), set2 is DELETED
     def union(target, source)
       check_present(target, source)
-
-      target_set = @elem2set_index[target]
-      source_set = @elem2set_index[source]
-
-      elems_of_source_set = @set2elems[source_set]
-
-      @set2elems[target_set] = ( @set2elems[target_set] | @set2elems.delete(source_set) )
-
-      elems_of_source_set.each { |elem| @elem2set_index[elem] = target_set }
+      @elem2node[source].connect(@elem2node[target])
 
       self
     end
@@ -41,34 +57,27 @@ module MazeAlgorithms
     #   find(:b)       # => 2
     #   find(:unknown) # => nil
     def find(elem)
-      @elem2set_index[elem]
+      @elem2node[elem].root
     end
 
     def reassign(elem)
-      unless @elem2set_index[elem]
+      unless @elem2node[elem]
         raise ArgumentError, "Element not found: #{elem}"
       end
-      old_set = @elem2set_index[elem]
-      new_set = get_new_set
 
-      @set2elems[old_set].subtract([elem])
-
-      @elem2set_index[elem] = new_set
-      @set2elems[new_set] = Set.new([elem])
-      compact!
+      @elem2node[elem] = get_new_set(elem)
     end
 
-    def get_new_set
-      @next_set += 1
-    end
-
-    def compact!
-      @set2elems.delete_if { |k, v| v.empty? }
-      self
+    def get_new_set(elem)
+      Node.new(elem)
     end
 
     def elements
-      @elem2set_index.keys
+      @elem2node.keys
+    end
+
+    def nodes
+      @elem2node.values
     end
 
     # Used to determine if a given number of elements are in the same set
@@ -81,41 +90,34 @@ module MazeAlgorithms
     def same_set?(*elems)
       return true if elems.uniq.size == 1
       elems.uniq.combination(2).all? do |one, two|
-        @elem2set_index[one] == @elem2set_index[two]
+        @elem2node[one].connected?(@elem2node[two])
       end
-    end
-
-    def ai(options = {})
-      @elem2set_index.ai(options) + "\n" + @set2elems.ai(options)
     end
 
     def to_s
       result = ''
       result << "<#{self.class} | "
-      result << "next_set: #{@next_set} | "
       result << "elements: #{elements}>"
     end
 
     def each_set(&blk)
       return unless block_given?
-      @set2elems.each_value do |set|
-        yield set
-      end
-    end
+      set2elems = Hash.new { |hsh, key| hsh[key] = [] }
 
-    def each_elem(&blk)
-      return unless block_given?
-      elements.each do |elem|
-        yield elem
+      nodes.each do |e|
+        set2elems[e.root] << e
       end
+
+      set2elems.each_value { |set| yield(set.map { |s| s.key }) }
     end
 
     private
 
     def check_present(*elems)
       elems.each do |elem|
-        raise ArgumentError, "Unknown element: '#{elem}'" unless @elem2set_index[elem]
+        raise ArgumentError, "Unknown element: '#{elem}'" unless @elem2node[elem]
       end
+
       elems
     end
   end
