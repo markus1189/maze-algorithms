@@ -5,7 +5,7 @@ require_relative '../lib/maze_algorithms'
 include MazeAlgorithms
 
 width  = (ARGV[0] || 20).to_i
-height = (ARGV[1] || 80).to_i
+height = (ARGV[1] || 10).to_i
 solve  = (ARGV[2] == "true") ? true : false
 seed   = (ARGV[3] || rand(0xFFFF_FFFF))
 
@@ -19,7 +19,7 @@ srand(conv_seed)
 
 #maze = EllersAlgorithm.generate(width, height)
 require 'pp'
-maze = Kruskal.generate(4, 4)
+maze = Kruskal.generate(width, height)
 
 maze =  MazeSolver.solve(maze) if solve
 
