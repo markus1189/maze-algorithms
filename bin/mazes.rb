@@ -6,24 +6,22 @@ include MazeAlgorithms
 
 width  = (ARGV[0] || 20).to_i
 height = (ARGV[1] || 80).to_i
-solve  = (ARGV[2] == "false") ? false : true
+solve  = (ARGV[2] == "true") ? true : false
 seed   = (ARGV[3] || rand(0xFFFF_FFFF))
 
 if seed.class == String
   conv_seed = seed.each_char.inject(0) { |mem, var| mem + var.ord }
+else
+  conv_seed = seed
 end
 
 srand(conv_seed)
 
-maze = EllersAlgorithm.generate(width, height)
-
-maze = EllersAlgorithm.generate(width, height)
-3.times do
-  maze << EllersAlgorithm.generate(width, height)
-end
+#maze = EllersAlgorithm.generate(width, height)
+require 'pp'
+maze = Kruskal.generate(4, 4)
 
 maze =  MazeSolver.solve(maze) if solve
 
-puts maze
-
-puts "Seed: #{seed}"
+pp maze
+puts "Size: #{width}x#{height}, Seed: #{seed}"
