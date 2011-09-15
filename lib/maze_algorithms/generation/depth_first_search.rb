@@ -1,7 +1,7 @@
 module MazeAlgorithms
   class DepthFirstSearch
     def self.generate(width, height)
-      maze = Maze.new(width, heigt)
+      maze = Maze.new(width, height)
       stack = [[0,0]]
       until stack.empty?
         current = stack.last

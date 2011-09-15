@@ -1,8 +1,8 @@
 module MazeAlgorithms
   class RecursiveBacktracker
     def self.generate(width, height,
-                      cx=rand(width), cy=rand(height))
-      maze = Maze.new(width, height)
+                      cx=rand(width), cy=rand(height), maze=nil)
+      maze = Maze.new(width, height) unless maze
       directions = maze.directions
       directions.shuffle!
 
@@ -13,7 +13,7 @@ module MazeAlgorithms
 
         if !maze.visited?(nx, ny)
           maze.carve_wall([cx, cy], [nx, ny])
-          generate(maze, nx, ny)
+          generate(width, height, nx, ny, maze)
         end
       end
 
