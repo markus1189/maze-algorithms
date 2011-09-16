@@ -11,7 +11,7 @@ module MazeAlgorithms
     end
 
     def root
-      @parent ? @parent.root : self
+      if not @parent then self else @parent.root end
     end
 
     def connected?(other)
