@@ -15,14 +15,12 @@ module MazeAlgorithms
 
 
       until edges.empty?
-        x, y, nx, ny = edges.pop.flatten
+        edge = edges.pop
+        from, to = *edge
 
-        flag_from, flag_to = calc_dir(x,y,nx,ny)
-
-        unless union_find.same_set?([x,y],[nx,ny])
-          maze[x,y] = maze[x,y] | flag_from
-          maze[nx,ny] |= flag_to
-          union_find.union([x,y],[nx,ny])
+        unless union_find.same_set?(from, to)
+          maze.carve_wall(from, to)
+          union_find.union(from, to)
         end
 
       end
@@ -40,18 +38,5 @@ module MazeAlgorithms
         mem
       end
     end
-
-    def self.calc_dir(x, y, nx, ny)
-      if x == nx && y-ny == 1
-        dir = :N
-      elsif x-nx == 1 && y == ny
-        dir = :W
-      else
-        raise "neither #{x} == #{nx} && #{y}-#{ny} nor #{x}-#{nx} && #{y}==#{ny}"
-      end
-
-      return Maze::FLAGS[dir], Maze::FLAGS[Maze::OPPOSITE[dir]]
-    end
-
   end
 end

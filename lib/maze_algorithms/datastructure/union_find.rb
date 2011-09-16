@@ -88,7 +88,7 @@ module MazeAlgorithms
     #   same_set?(1,1,...,1) # => always true
     #   same_set?(1,2,3)     # => true if 1,2,3 are in the same set
     def same_set?(*elems)
-      return true if elems.uniq.size == 1
+      #return true if elems.uniq.size == 1
       elems.uniq.combination(2).all? do |one, two|
         @elem2node[one].connected?(@elem2node[two])
       end
