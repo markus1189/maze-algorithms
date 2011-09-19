@@ -10,7 +10,9 @@ options = {
   width: 20,
   height: 20,
   solve: false,
-  seed: "#{rand(0xFFFF_FFFF)}"
+  seed: "#{rand(0xFFFF_FFFF)}",
+  visual: false,
+  delay: 0
 }
 
 OptionParser.new do |opts|
@@ -19,26 +21,34 @@ OptionParser.new do |opts|
   opts.on('-a', '--algorithm ALGORITHM',
           "Choose the algorithm used for the maze (Default: Kruskal") do |algo|
     options[:gen_algo] = algo.downcase.to_sym
-          end
+  end
 
   opts.on('-s', '--size WIDTHxHEIGHT',
           "The size of the maze, note the 'x' between WIDTH and HEIGHT") do |size|
     width, height    = size.split('x')
     options[:width]  = width.to_i
     options[:height] = height.to_i
-          end
+  end
 
   opts.on('-e', '--seed SEED',
           "The seed for the maze for reconstruction") do |seed|
     options[:seed] = seed
-          end
+  end
 
   opts.on('-p', '--show--path FROM,TO',
           "Find the path from FROM to TO, where each is a pair of coordinates.
          Example: FROM=0,0 TO=10,10 => --show-path 0,0,10,10") do |from_to|
     x,y,nx,ny = from_to.split(',').map!(&:to_i)
     options[:solve] = [[x,y],[nx,ny]]
-         end
+  end
+
+  opts.on('-v', '--visual', "Display the generation progress") do |delay|
+    options[:visual] = true
+  end
+
+  opts.on('-d', '--delay N', "Sleep N ms between steps") do |delay|
+    options[:delay] = delay.to_f
+  end
 
   opts.on_tail("-?", "-h", "--help", "Show this message") do
     puts opts
@@ -53,8 +63,10 @@ width  = options[:width]
 height = options[:height]
 solve  = options[:solve]
 seed   = options[:seed]
+delay  = options[:delay]
+visual = options[:visual]
 
-conv_seed = seed.each_char.inject(0) { |mem, var| mem * var.ord } % 21013
+conv_seed = seed.each_char.inject(0) { |mem, var| mem * var.ord+1 }
 srand(conv_seed)
 
 algorithms = {
@@ -67,7 +79,8 @@ algorithms = {
 
 print "\e[2J" # clear the screen
 
-maze = algorithms[algo].generate(width, height) { |m| print "\e[H"; p m }
+visualizer = lambda { |maze| print "\e[H"; p maze if visual; sleep(delay) } #executed for every step
+maze = algorithms[algo].generate(width, height, &visualizer)
 maze = MazeSolver.solve(maze, *solve) if options[:solve]
 
 puts "Algorithm: #{algorithms[algo]}, Size: #{width}x#{height}, Seed: #{seed}"
