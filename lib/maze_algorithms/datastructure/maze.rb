@@ -109,20 +109,20 @@ module MazeAlgorithms
       result << "\n"
       @height.times do |y|
         @width.times do |x|
-          result << "+" << ((@grid[y][x] & FLAGS[:N] == 0) ? "---" : "   ")
+          result << '+' << ((@grid[y][x] & FLAGS[:N] == 0) ? '---' : '   ')
         end
         result << "+\n"
         @width.times do |x|
           if x == 0
-            result << "|"
+            result << '|'
           else
-            result << ((@grid[y][x] & FLAGS[:W] == 0) ? "|" : " ")
+            result << ((@grid[y][x] & FLAGS[:W] == 0) ? '|' : ' ')
           end
-          result << (@path.include?([x,y]) ? " * " : "   ")
+          result << (@path.include?([x,y]) ? ' * ' : '   ')
         end
         result << "|\n"
       end
-      result << ("+---" * @width) + "+\n"
+      result << ('+---' * @width) + "+\n"
     end
     alias_method :to_str, :to_s
 
