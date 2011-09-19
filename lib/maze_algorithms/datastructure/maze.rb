@@ -65,8 +65,7 @@ module MazeAlgorithms
       if from_y == to_y
         return :E if from_x - to_x == -1
         return :W if from_x - to_x ==  1
-      end
-      if from_x == to_x
+      elsif from_x == to_x
         return :S if from_y - to_y == -1
         return :N if from_y - to_y ==  1
       end
@@ -80,17 +79,12 @@ module MazeAlgorithms
     #   move_coords(3,4, :E) # => [4,4]
     #   move_coords(2,1, :S) # => [2,2]
     def move_coords(x, y, direction)
-      dx, dy = MOVES[direction] # get the moving coords
-      dx, dy = dx+x, dy+y       # add from coords to moving
-
-      return dx, dy if valid_coords?(dx, dy)
+      nx, ny = [x,y].zip(MOVES[direction]).map { |p| p.inject { |m,v| m+v } }
+      return nx, ny if valid_coords?(nx, ny)
     end
 
     def valid_coords?(x, y)
-      valid = true
-      valid &&= (x >= 0 && x < @width)
-      valid &&= (y >= 0 && y < @height)
-      return valid
+      (x >= 0 && x < @width) && (y >= 0 && y < @height)
     end
 
     def visited?(x, y)
@@ -104,6 +98,10 @@ module MazeAlgorithms
       from_p2 = @grid[p2[1]][p2[0]] & FLAGS[OPPOSITE[dir]]
 
       return from_p1 == 0 && from_p2 == 0
+    end
+
+    def neighbours(x, y)
+      MOVES.keys.inject([]) { |mem,dir| mem << move_coords(x,y,dir) }.compact
     end
 
     def to_s

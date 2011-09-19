@@ -133,5 +133,21 @@ describe "Maze" do
     end
   end
 
+  context "when trying to get neighbours" do
+    it "should return coords for all directions if the position allows it" do
+      maze = MazeAlgorithms::Maze.new(5, 5)
+      maze.neighbours(2,2).size.should == MazeAlgorithms::Maze::MOVES.keys.size
+    end
+
+    it "should only return the possible neighbours" do
+      maze = MazeAlgorithms::Maze.new(3, 3)
+      maze.neighbours(0,0).size.should < MazeAlgorithms::Maze::MOVES.keys.size
+
+      maze = MazeAlgorithms::Maze.new(1, 1)
+      maze.neighbours(0,0).size.should == 0
+    end
+
+  end
+
 end
 
