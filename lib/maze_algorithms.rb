@@ -12,6 +12,7 @@ maze_algorithms/generation/depth_first_search
 maze_algorithms/generation/recursive_backtracker
 maze_algorithms/generation/ellers_algorithm
 maze_algorithms/generation/kruskal
+maze_algorithms/generation/prim
 
 maze_algorithms/pathfinding/maze_solver
 EOS
