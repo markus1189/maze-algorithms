@@ -52,12 +52,12 @@ module MazeAlgorithms
     def step(n=10, &blk)
       (n-1).times do
         random_join
-        vertical_connections
+        yield @result if block_given?
 
+        vertical_connections
         yield @result if block_given?
       end
       final_row
-
       yield @result if block_given?
 
       self
