@@ -5,8 +5,8 @@ require 'optparse'
 
 include MazeAlgorithms
 
-options = {
-  gen_algo: :kruskal,
+opt = {
+  algo: :eller,
   width: 20,
   height: 20,
   solve: false,
@@ -20,34 +20,34 @@ OptionParser.new do |opts|
 
   opts.on('-a', '--algorithm ALGORITHM',
           "Choose the algorithm used for the maze (Default: Kruskal") do |algo|
-    options[:gen_algo] = algo.downcase.to_sym
+    opt[:algo] = algo.downcase.to_sym
   end
 
   opts.on('-s', '--size WIDTHxHEIGHT',
           "The size of the maze, note the 'x' between WIDTH and HEIGHT") do |size|
     width, height    = size.split('x')
-    options[:width]  = width.to_i
-    options[:height] = height.to_i
+    opt[:width]  = width.to_i
+    opt[:height] = height.to_i
   end
 
   opts.on('-e', '--seed SEED',
           "The seed for the maze for reconstruction") do |seed|
-    options[:seed] = seed
+    opt[:seed] = seed
   end
 
   opts.on('-p', '--show--path FROM,TO',
           "Find the path from FROM to TO, where each is a pair of coordinates.
          Example: FROM=0,0 TO=10,10 => --show-path 0,0,10,10") do |from_to|
     x,y,nx,ny = from_to.split(',').map!(&:to_i)
-    options[:solve] = [[x,y],[nx,ny]]
+    opt[:solve] = [[x,y],[nx,ny]]
   end
 
   opts.on('-v', '--visual', "Display the generation progress") do |delay|
-    options[:visual] = true
+    opt[:visual] = true
   end
 
   opts.on('-d', '--delay N', "Sleep N ms between steps") do |delay|
-    options[:delay] = delay.to_f
+    opt[:delay] = delay.to_f
   end
 
   opts.on_tail("-?", "-h", "--help", "Show this message") do
@@ -58,15 +58,7 @@ end.parse!
 
 # ------------------------------------------------------------------------------
 
-algo   = options[:gen_algo]
-width  = options[:width]
-height = options[:height]
-solve  = options[:solve]
-seed   = options[:seed]
-delay  = options[:delay]
-visual = options[:visual]
-
-conv_seed = seed.each_char.inject(0) { |mem, var| mem * var.ord+1 }
+conv_seed = opt[:seed].each_char.inject(0) { |mem, var| mem * var.ord+1 }
 srand(conv_seed)
 
 algorithms = {
@@ -79,10 +71,10 @@ algorithms = {
 
 print "\e[2J" # clear the screen
 
-visualizer = lambda { |maze| print "\e[H"; p maze if visual; sleep(delay) } #executed for every step
-maze = algorithms[algo].generate(width, height, &visualizer)
-maze = MazeSolver.solve(maze, *solve) if solve
+visualizer = lambda { |maze| print "\e[H"; p maze if opt[:visual]; sleep(opt[:delay]) } #executed for every step
+maze = algorithms[opt[:algo]].generate(opt[:width], opt[:height], &visualizer)
+maze = MazeSolver.solve(maze, *opt[:solve]) if opt[:solve]
 
-p maze unless visual
+p maze unless opt[:visual]
 
-puts "Algorithm: #{algorithms[algo]}, Size: #{width}x#{height}, Seed: #{seed}"
+puts "Algorithm: #{algorithms[opt[:algo]]}, Size: #{opt[:width]}x#{opt[:height]}, Seed: #{opt[:seed]}"
