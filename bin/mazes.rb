@@ -81,6 +81,8 @@ print "\e[2J" # clear the screen
 
 visualizer = lambda { |maze| print "\e[H"; p maze if visual; sleep(delay) } #executed for every step
 maze = algorithms[algo].generate(width, height, &visualizer)
-maze = MazeSolver.solve(maze, *solve) if options[:solve]
+maze = MazeSolver.solve(maze, *solve) if solve
+
+p maze unless visual
 
 puts "Algorithm: #{algorithms[algo]}, Size: #{width}x#{height}, Seed: #{seed}"
