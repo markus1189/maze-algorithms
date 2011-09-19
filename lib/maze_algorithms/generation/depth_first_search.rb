@@ -1,6 +1,6 @@
 module MazeAlgorithms
   class DepthFirstSearch
-    def self.generate(width, height)
+    def self.generate(width, height, &blk)
       maze = Maze.new(width, height)
       stack = [[0,0]]
       until stack.empty?
@@ -21,6 +21,8 @@ module MazeAlgorithms
           stack.pop if nbs.size==1
           stack.push rnd_neighbour
         end
+
+        yield maze if block_given?
       end
 
       maze

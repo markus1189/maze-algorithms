@@ -23,6 +23,7 @@ module MazeAlgorithms
           union_find.union(from, to)
         end
 
+        yield maze if block_given?
       end
 
       maze

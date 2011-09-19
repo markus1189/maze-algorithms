@@ -45,16 +45,20 @@ module MazeAlgorithms
       @union_find = UnionFind.new(0...size)
     end
 
-    def self.generate(width, height)
-      new(width).step(height).result
+    def self.generate(width, height, &blk)
+      new(width).step(height, &blk).result
     end
 
-    def step(n=10)
+    def step(n=10, &blk)
       (n-1).times do
         random_join
         vertical_connections
+
+        yield @result if block_given?
       end
       final_row
+
+      yield @result if block_given?
 
       self
     end
@@ -111,6 +115,6 @@ module MazeAlgorithms
     def coin(*args)
       args.sample
     end
-      
+
   end
 end

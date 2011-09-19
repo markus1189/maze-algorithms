@@ -61,11 +61,13 @@ algorithms = {
   :kruskal => Kruskal,
   :eller   => EllersAlgorithm,
   :dfs     => DepthFirstSearch,
-  :rec     => RecursiveBacktracker
+  :rec     => RecursiveBacktracker,
+  :prim    => Prim
 }
 
-maze = algorithms[algo].generate(width, height)
+print "\e[2J" # clear the screen
+
+maze = algorithms[algo].generate(width, height) { |m| print "\e[H"; p m }
 maze = MazeSolver.solve(maze, *solve) if options[:solve]
 
-p maze
-puts "Algorithm: #{algo}, Size: #{width}x#{height}, Seed: #{seed}"
+puts "Algorithm: #{algorithms[algo]}, Size: #{width}x#{height}, Seed: #{seed}"
