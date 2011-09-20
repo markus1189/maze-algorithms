@@ -25,3 +25,13 @@ task :ctags do
   system "ctags -R *"
 end
 
+desc "Run benchmarks"
+task :bench do
+  cwd = File.expand_path(File.dirname(__FILE__))
+  bench_dir = cwd + '/benchmarks/'
+  (Dir.entries(bench_dir) - [".", ".."]).each do |bm|
+    puts "Benchmarking: '#{bm}'"
+    system "ruby #{bench_dir + bm}"
+    puts
+  end
+end

@@ -2,6 +2,7 @@ require_relative '../lib/maze_algorithms'
 require 'benchmark'
 
 include Benchmark
+include MazeAlgorithms
 
 bmbm(6) do |x|
   @maze = Maze.new(100,100)
