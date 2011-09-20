@@ -28,19 +28,6 @@ describe "UnionFind" do
       end
     end
 
-    it "should correctly determine if elements are in the same set" do
-      apply_to_all do |union|
-        one, two = union.elements.take(2)
-
-        union.same_set?(one).should be_true
-        union.same_set?(one,one).should be_true
-
-        union.same_set?(one,two).should be_false
-        union.union(one, two)
-        union.same_set?(one, two).should be_true
-      end
-    end
-
     it "should raise an error if the element is not found" do
       apply_to_all do |union|
         expect {

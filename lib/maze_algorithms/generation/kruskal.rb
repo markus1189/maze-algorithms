@@ -13,12 +13,11 @@ module MazeAlgorithms
       maze = Maze.new(width, height)
       edges = edge_list(maze).sort_by {rand}
 
-
       until edges.empty?
         edge = edges.pop
         from, to = *edge
 
-        unless union_find.same_set?(from, to)
+        unless union_find.find(from) == union_find.find(to)
           maze.carve_wall(from, to)
           union_find.union(from, to)
         end
@@ -39,5 +38,6 @@ module MazeAlgorithms
         mem
       end
     end
+
   end
 end

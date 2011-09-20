@@ -12,16 +12,8 @@ module MazeAlgorithms
       if not @parent then self else @parent.root end
     end
 
-    def connected?(other)
-      root == other.root
-    end
-
     def connect(other)
       root.parent = other
-    end
-
-    def self.to_proc
-      lambda { |arg|  new(arg) }
     end
 
     def to_s
@@ -84,20 +76,6 @@ module MazeAlgorithms
 
     def nodes
       @elem2node.values
-    end
-
-    # Used to determine if a given number of elements are in the same set
-    # the relation is transitive, reflexive and commutative
-    #
-    # Example:
-    #   same_set?(1)         # => always true
-    #   same_set?(1,1,...,1) # => always true
-    #   same_set?(1,2,3)     # => true if 1,2,3 are in the same set
-    def same_set?(*elems)
-      #return true if elems.uniq.size == 1
-      elems.uniq.combination(2).all? do |one, two|
-        @elem2node[one].connected?(@elem2node[two])
-      end
     end
 
     def to_s

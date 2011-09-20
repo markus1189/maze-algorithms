@@ -72,7 +72,7 @@ module MazeAlgorithms
       (0...@result.width).each_cons(2) do |cell_1, cell_2|
         next unless coin(true,false)
 
-        if not @union_find.same_set?(cell_1,cell_2)
+        if @union_find.find(cell_1) != @union_find.find(cell_2)
           @union_find.union(cell_1, cell_2)
           @result.carve_wall([cell_1,-1],[cell_2,-1])
         end
@@ -105,7 +105,7 @@ module MazeAlgorithms
     # we have to connect ALL adjacent (but disjoint) cells.
     def final_row
       (0...@result.width).each_cons(2) do |cell_1, cell_2|
-        if not @union_find.same_set?(cell_1,cell_2)
+        if @union_find.find(cell_1) != @union_find.find(cell_2)
           @union_find.union(cell_1, cell_2)
           @result.carve_wall([cell_1,-1],[cell_2,-1])
         end
