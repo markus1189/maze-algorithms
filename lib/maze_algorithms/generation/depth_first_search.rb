@@ -6,11 +6,7 @@ module MazeAlgorithms
       until stack.empty?
         current = stack.last
 
-        nbs = []
-        maze.directions.each do |direction|
-          coords = maze.move_coords(*current, direction)
-          nbs << coords unless maze.visited?(*coords) if coords
-        end
+        nbs = maze.neighbours(*current).reject { |nb| maze.visited?(*nb) }
 
         if nbs.empty?
           stack.pop
