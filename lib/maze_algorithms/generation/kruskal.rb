@@ -33,11 +33,10 @@ module MazeAlgorithms
 
     # Central generate method, same for every algorithm
     #
-    #
     # @param width  [Fixnum]
     # @param height [Fixnum]
     #
-    # @return Returns the generated Maze
+    # @return [Maze] Returns the generated Maze
     def self.generate(width, height)
       cells = []
       (0...height).each do |y|

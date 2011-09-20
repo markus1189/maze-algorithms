@@ -45,10 +45,19 @@ module MazeAlgorithms
       @union_find = UnionFind.new(0...size)
     end
 
+    # Central generate method, same for every algorithm
+    #
+    # @param width  [Fixnum]
+    # @param height [Fixnum]
+    #
+    # @return [Maze] Returns the generated Maze
     def self.generate(width, height, &blk)
       new(width).step(height, &blk).result
     end
 
+    # The necessary operations for one row are performed N times
+    #
+    # @param n [Fixnum] the number of steps to perform
     def step(n=10, &blk)
       (n-1).times do
         random_join
@@ -112,6 +121,11 @@ module MazeAlgorithms
       end
     end
 
+    # Randomly choose one of the elements of args
+    #
+    # @param args [variable args] the args to choose from
+    #
+    # @return a random chosen element from args
     def coin(*args)
       args.sample
     end
