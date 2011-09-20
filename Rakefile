@@ -28,10 +28,9 @@ end
 desc "Run benchmarks"
 task :bench do
   cwd = File.expand_path(File.dirname(__FILE__))
-  bench_dir = cwd + '/benchmarks/'
-  (Dir.entries(bench_dir) - [".", ".."]).each do |bm|
+  Dir.glob("**/*_bm.rb").each do |bm|
     puts "Benchmarking: '#{bm}'"
-    system "ruby #{bench_dir + bm}"
-    puts
+    system "ruby #{bm}"
+    puts "-"*80
   end
 end
