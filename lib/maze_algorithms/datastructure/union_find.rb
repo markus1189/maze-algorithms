@@ -1,5 +1,3 @@
-require 'set'
-
 module MazeAlgorithms
   class Node
     attr_accessor :parent
