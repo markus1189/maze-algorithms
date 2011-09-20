@@ -26,9 +26,18 @@
 #   +---+---+---+---+---+   +---+---+---+   +---+   +---+---+---+   +---+
 #   | L | M | N | O | P |   | L | M | N | I | P |   | L   L | N | I | P |
 #   +---+---+---+---+---+   +---+---+---+---+---+   +---+---+---+---+---+
+#   Connect 0,0 with 0,1    Connect 3,1 with 3,2    Connect 0,2 with 1,2
+#
 module MazeAlgorithms
   class Kruskal
 
+    # Central generate method, same for every algorithm
+    #
+    #
+    # @param width  [Fixnum]
+    # @param height [Fixnum]
+    #
+    # @return Returns the generated Maze
     def self.generate(width, height)
       cells = []
       (0...height).each do |y|
@@ -56,6 +65,12 @@ module MazeAlgorithms
       maze
     end
 
+    # Generates a list of all edges, by iterating
+    # over the given maze
+    #
+    # @param maze [Maze] the maze to generate the list for
+    # @return [Array<Array<Fixnum>,Array<Fixnum>>] The list of
+    #   edges
     def self.edge_list(maze)
       maze.inject([]) do |mem, ary|
         cell, x, y = *ary
