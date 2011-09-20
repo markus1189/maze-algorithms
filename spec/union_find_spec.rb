@@ -23,8 +23,6 @@ describe "UnionFind" do
         one, two = union.elements.take(2)
 
         union.union(one, two)
-        sets = union.elements.inject([]) { |mem, elem| mem << union.find(elem) }
-        #sets.uniq.size.should == (union.elements.size-1)
 
         union.find(one).should == union.find(two)
       end

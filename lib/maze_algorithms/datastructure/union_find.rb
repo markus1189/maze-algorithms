@@ -55,8 +55,15 @@ module MazeAlgorithms
     #   find(:b)       # => 2
     #   find(:unknown) # => nil
     def find(elem)
-      self.parent = find(elem) if @parent
-      @elem2node[elem].root
+      elem_node = @elem2node[elem]
+
+      if elem_node.parent
+        elem_node.parent = find(elem_node.parent.key)
+      else
+        return elem_node
+      end
+
+      return elem_node.parent
     end
 
     def reassign(elem)
