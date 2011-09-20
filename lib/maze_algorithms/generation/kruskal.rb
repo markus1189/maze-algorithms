@@ -1,3 +1,31 @@
+# This is the Kruskal Algorithm, used to generate MSTs.
+# This version is randomized to generate perfect mazes
+#
+# The key point is to have a good datastructure to manage
+# the disjoint sets of ervery cell.
+#
+# Steps:
+#   - Generate a list of all edges
+#   - randomly connect the edges if
+#     the cells are in disjoint sets
+#     and merge the sets
+#
+# Example:
+#   +---+---+---+---+---+
+#   | A | B | C | D | E |
+#   +---+---+---+---+---+
+#   | F | G | H | I | J |
+#   +---+---+---+---+---+
+#   | L | M | N | O | P |
+#   +---+---+---+---+---+
+#             v
+#   +---+---+---+---+---+   +---+---+---+---+---+   +---+---+---+---+---+
+#   | A   A | C | D | E |   | A   A | C | D | E |   | A   A | C | D | E |
+#   +---+---+---+---+---+   +---+---+---+---+---+   +---+---+---+---+---+
+#   | F | G | H | I | J | > | F | G | H | I | J | > | F | G | H | I | J | and on and on
+#   +---+---+---+---+---+   +---+---+---+   +---+   +---+---+---+   +---+
+#   | L | M | N | O | P |   | L | M | N | I | P |   | L   L | N | I | P |
+#   +---+---+---+---+---+   +---+---+---+---+---+   +---+---+---+---+---+
 module MazeAlgorithms
   class Kruskal
 
