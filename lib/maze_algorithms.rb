@@ -27,3 +27,6 @@ required_files.each_line do |line|
   require_relative line
 end
 
+include MazeAlgorithms
+include Datastructure
+include Generation

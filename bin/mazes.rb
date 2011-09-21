@@ -3,8 +3,6 @@
 require_relative '../lib/maze_algorithms'
 require 'optparse'
 
-include MazeAlgorithms
-
 opt = {
   algo: :eller,
   width: 20,

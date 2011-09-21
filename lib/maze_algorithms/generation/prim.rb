@@ -1,33 +1,35 @@
 module MazeAlgorithms
+  module Generation
 
-  class Prim
-    def self.generate(width, height, &blk)
-      maze = Maze.new(width, height)
+    class Prim
+      def self.generate(width, height, &blk)
+        maze = Maze.new(width, height)
 
-      start = [rand(width),rand(height)]
-      nbs = Set.new(maze.neighbours(*start))
+        start = [rand(width),rand(height)]
+        nbs = Set.new(maze.neighbours(*start))
 
-      step = nbs.sample
-      nbs.delete step
+        step = nbs.sample
+        nbs.delete step
 
-      maze.carve_wall(start, step)
+        maze.carve_wall(start, step)
 
-      until nbs.empty?
-        current = nbs.sample
-        nbs.delete current
+        until nbs.empty?
+          current = nbs.sample
+          nbs.delete current
 
-        adjacent = maze.neighbours(*current).group_by { |c| maze.visited?(*c) }
+          adjacent = maze.neighbours(*current).group_by { |c| maze.visited?(*c) }
 
-        maze.carve_wall(current, adjacent[true].sample) # connect to already visited
+          maze.carve_wall(current, adjacent[true].sample) # connect to already visited
 
-        nbs.merge(adjacent[false]) if adjacent[false]
+          nbs.merge(adjacent[false]) if adjacent[false]
 
-        yield maze if block_given?
+          yield maze if block_given?
+        end
+
+        maze
       end
 
-      maze
     end
 
   end
-
 end

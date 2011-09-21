@@ -2,7 +2,6 @@ require_relative '../lib/maze_algorithms'
 require 'benchmark'
 
 include Benchmark
-include MazeAlgorithms
 
 algorithms = [
   RecursiveBacktracker,

@@ -5,10 +5,10 @@ describe "UnionFind" do
     before(:each) do
       @unions = []
 
-      @unions << MazeAlgorithms::UnionFind.new(%w{a b c d e f})
-      @unions << MazeAlgorithms::UnionFind.new([1,2,3,4,5,6])
-      @unions << MazeAlgorithms::UnionFind.new([[1],[2],[3],[4],[5],[6]])
-      @unions << MazeAlgorithms::UnionFind.new([:one,:two,:three,:four])
+      @unions << UnionFind.new(%w{a b c d e f})
+      @unions << UnionFind.new([1,2,3,4,5,6])
+      @unions << UnionFind.new([[1],[2],[3],[4],[5],[6]])
+      @unions << UnionFind.new([:one,:two,:three,:four])
     end
 
     it "should assign the entries correctly in a unique set" do

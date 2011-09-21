@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe "Maze" do
   before(:each) do
-    @maze = MazeAlgorithms::Maze.new(20, 10)
+    @maze = Maze.new(20, 10)
   end
 
   it "should have the given width and height" do
@@ -106,9 +106,9 @@ describe "Maze" do
 
   context "when comparing and combining mazes" do
     it "should be comparable to other mazes via ==" do
-      maze1 =MazeAlgorithms::Maze.new(5,5)
-      maze2 =MazeAlgorithms::Maze.new(5,5)
-      maze3 =MazeAlgorithms::Maze.new(42,42)
+      maze1 = Maze.new(5,5)
+      maze2 = Maze.new(5,5)
+      maze3 = Maze.new(42,42)
 
       maze1.should eq(maze2)
       maze2.should eq(maze1)
@@ -118,9 +118,9 @@ describe "Maze" do
     end
 
     it "should append the second maze below the first using merge!" do
-      maze1 =MazeAlgorithms::Maze.new(5,37)
-      maze2 =MazeAlgorithms::Maze.new(5,5)
-      resulting_maze =MazeAlgorithms::Maze.new(5,42)
+      maze1 = Maze.new(5,37)
+      maze2 = Maze.new(5,5)
+      resulting_maze = Maze.new(5,42)
 
       maze1.merge!(maze2)
       maze1.width.should  eq(5)
@@ -135,15 +135,15 @@ describe "Maze" do
 
   context "when trying to get neighbours" do
     it "should return coords for all directions if the position allows it" do
-      maze = MazeAlgorithms::Maze.new(5, 5)
-      maze.neighbours(2,2).size.should == MazeAlgorithms::Maze::MOVES.keys.size
+      maze = Maze.new(5, 5)
+      maze.neighbours(2,2).size.should == Maze::MOVES.keys.size
     end
 
     it "should only return the possible neighbours" do
-      maze = MazeAlgorithms::Maze.new(3, 3)
-      maze.neighbours(0,0).size.should < MazeAlgorithms::Maze::MOVES.keys.size
+      maze = Maze.new(3, 3)
+      maze.neighbours(0,0).size.should < Maze::MOVES.keys.size
 
-      maze = MazeAlgorithms::Maze.new(1, 1)
+      maze = Maze.new(1, 1)
       maze.neighbours(0,0).size.should == 0
     end
 
