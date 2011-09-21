@@ -62,11 +62,12 @@ conv_seed = opt[:seed].each_char.inject(0) { |mem, var| mem * var.ord+1 }
 srand(conv_seed)
 
 algorithms = {
-  :kruskal => Kruskal,
-  :eller   => EllersAlgorithm,
-  :dfs     => DepthFirstSearch,
-  :rec     => RecursiveBacktracker,
-  :prim    => Prim
+  :kruskal  => Kruskal,
+  :eller    => EllersAlgorithm,
+  :dfs      => DepthFirstSearch,
+  :rec      => RecursiveBacktracker,
+  :prim     => Prim,
+  :division => Division
 }
 
 print "\e[2J" # clear the screen
