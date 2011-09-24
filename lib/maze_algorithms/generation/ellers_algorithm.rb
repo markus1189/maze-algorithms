@@ -92,7 +92,6 @@ module MazeAlgorithms
       end
 
       # Step 2
-      # Copies the previous row,
       # randomly reassigns cells and carves the walls between rows
       def vertical_connections
         connected_row = Maze.new(@result.width, 1)
