@@ -74,4 +74,21 @@ describe "UnionFind" do
       @unions.each { |union| yield(union) }
     end
   end
+
+  context "Bugs" do
+    before(:each) do
+      @uf = UnionFind.new((0..15).to_a)
+    end
+    it "should correctly reassign nodes" do
+      @uf.union 0,1
+      @uf.union 1,2
+
+      @uf.reassign 0
+
+      @uf.union 0,3
+
+      @uf.find(3).should_not == @uf.find(1)
+    end
+    
+  end
 end

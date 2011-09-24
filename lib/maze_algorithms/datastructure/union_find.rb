@@ -1,8 +1,7 @@
 module MazeAlgorithms
   module Datastructure
     class Node
-      attr_accessor :parent
-      attr_reader :key
+      attr_accessor :parent, :key
 
       def initialize(key)
         @key = key
@@ -45,13 +44,24 @@ module MazeAlgorithms
       # Given an element, returns the set it is assigned to or nil if not found
       #
       # Example:
-      #   find(:b)       # => 2
+      #   find(:b)       # => 2 (Of class Node)
       #   find(:unknown) # => nil
+      #
+      # NOTE:
+      #   The first part is very ugly but is required, because the lookup of reassigned
+      #   nodes would point from hash to the wrong node which has wrong connections and
+      #   therefore a not perfect maze as consequence
       def find(elem)
-        elem_node = @elem2node[elem]
+        if elem.class != Node then
+          elem_node = @elem2node[elem]
+        else
+          elem_node = elem
+        end
+
+        raise ArgumentError, "Unknown element: #{elem}" unless elem_node
 
         if elem_node.parent
-          elem_node.parent = find(elem_node.parent.key)
+          elem_node.parent = find(elem_node.parent)
         else
           return elem_node
         end
