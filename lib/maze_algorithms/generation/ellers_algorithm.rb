@@ -79,16 +79,7 @@ module MazeAlgorithms
       #
       # Appends the resulting row to the resulting maze
       def random_join
-        (0...@result.width).each_cons(2) do |cell_1, cell_2|
-          next unless coin(true,false)
-
-          if @union_find.find(cell_1) != @union_find.find(cell_2)
-            @union_find.union(cell_1, cell_2)
-            @result.carve_wall([cell_1,-1],[cell_2,-1])
-          end
-        end
-
-        self
+        union_disjoint_sets_carve_wall(skip_probability: [true, false] )
       end
 
       # Step 2
@@ -114,7 +105,23 @@ module MazeAlgorithms
       # The final row has to be treated slightly different:
       # we have to connect ALL adjacent (but disjoint) cells.
       def final_row
+        union_disjoint_sets_carve_wall(skip_probability: [false] )
+      end
+
+      # Iterates pairwise over an row and connects adjacent cells of disjoint
+      # sets according to the given skip_probability
+      #
+      # Used as Step 1 and Step 3 as the final row is just as the all other rows,
+      # with the difference that no cells are skipped.
+      #
+      # @param opt
+      #   MUST have the key ':skip_probability' [Array<Boolean>]
+      #
+      # @return self
+      def union_disjoint_sets_carve_wall(opt = { skip_probability: [true, false] } )
         (0...@result.width).each_cons(2) do |cell_1, cell_2|
+          next if opt[:skip_probability].sample
+
           if @union_find.find(cell_1) != @union_find.find(cell_2)
             @union_find.union(cell_1, cell_2)
             @result.carve_wall([cell_1,-1],[cell_2,-1])
