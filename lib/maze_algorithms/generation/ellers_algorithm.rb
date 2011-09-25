@@ -107,6 +107,7 @@ module MazeAlgorithms
           end
         end
         (@union_find.elements-changed_cells).each { |c| @union_find.reassign(c) }
+
         self
       end
 
@@ -119,6 +120,8 @@ module MazeAlgorithms
             @result.carve_wall([cell_1,-1],[cell_2,-1])
           end
         end
+
+        self
       end
 
       # Randomly choose one of the elements of args
