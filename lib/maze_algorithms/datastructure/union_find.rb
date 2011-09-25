@@ -1,7 +1,8 @@
 module MazeAlgorithms
   module Datastructure
     class Node
-      attr_accessor :parent, :key
+      attr_accessor :parent
+      attr_reader :key
 
       def initialize(key)
         @key = key
@@ -15,6 +16,7 @@ module MazeAlgorithms
       def connect(other)
         root.parent = other
       end
+      alias_method :link, :connect
 
       def to_s
         "<#{@key}|#{@parent}>"
