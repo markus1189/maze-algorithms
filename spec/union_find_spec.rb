@@ -54,19 +54,21 @@ describe "UnionFind" do
       end
     end
 
-    it "should be possible to iterate over the sets" do
-      apply_to_all do |union|
-
-        one, two = union.elements.take(2)
-        union.union(one, two)
-
-        sets = []
-        union.each_set do |set|
-          sets << set
-        end
-
-        sets.first.should == [one,two]
+    context "Bugs" do
+      before(:each) do
+        @uf = UnionFind.new((0..15).to_a)
       end
+      it "should correctly reassign nodes" do
+        @uf.union 0,1
+        @uf.union 1,2
+
+        @uf.reassign 0
+
+        @uf.union 0,3
+
+        @uf.find(3).should_not == @uf.find(1)
+      end
+
     end
 
     def apply_to_all(&block)
@@ -75,20 +77,4 @@ describe "UnionFind" do
     end
   end
 
-  context "Bugs" do
-    before(:each) do
-      @uf = UnionFind.new((0..15).to_a)
-    end
-    it "should correctly reassign nodes" do
-      @uf.union 0,1
-      @uf.union 1,2
-
-      @uf.reassign 0
-
-      @uf.union 0,3
-
-      @uf.find(3).should_not == @uf.find(1)
-    end
-    
-  end
 end

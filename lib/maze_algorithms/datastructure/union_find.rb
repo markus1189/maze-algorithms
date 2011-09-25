@@ -5,12 +5,11 @@ module MazeAlgorithms
       attr_reader :key
 
       def initialize(key)
-        @key = key
-        @parent = nil
+        @key, @parent = key, nil
       end
 
       def root
-        if not @parent then self else @parent.root end
+        @parent ? @parent.root : self
       end
 
       def connect(other)
@@ -46,20 +45,13 @@ module MazeAlgorithms
       # Example:
       #   find(:b)       # => 2 (Of class Node)
       #   find(:unknown) # => nil
-      #
-      # NOTE:
-      #   The first part is very ugly but is required, because the lookup of reassigned
-      #   nodes would point from hash to the wrong node which has wrong connections and
-      #   therefore a not perfect maze as consequence
-      def find(elem)
-        if elem.class == Node then
-          elem_node = elem
-        else
-          elem_node = checked_get_node(elem)
-        end
+      def find(key)
+        find_node(checked_get_node(key))
+      end
 
+      def find_node(elem_node)
         if elem_node.parent
-          elem_node.parent = find(elem_node.parent) #path compression
+          elem_node.parent = find_node(elem_node.parent) #path compression
         else
           return elem_node
         end
@@ -82,29 +74,10 @@ module MazeAlgorithms
       end
 
       def to_s
-        result = ''
-        result << "<#{self.class} | "
-        result << "elements: #{elements}>"
-      end
-
-      def each_set(&blk)
-        return unless block_given?
-        set2elems = Hash.new { |hsh, key| hsh[key] = [] }
-
-        nodes.each do |e|
-          set2elems[e.root] << e
-        end
-
-        set2elems.each_value { |set| yield(set.map { |s| s.key }) }
+        "<#{self.class} | elements: #{elements}>"
       end
 
       private
-
-      # Iterates over every item and therefore compresses all paths
-      # NOTE that normally this is done passively when using find(<key<)
-      def compress
-        @elem2node.each_key { |key| find(key) }
-      end
 
       def checked_get_node(elem)
         @elem2node[elem] || ( raise ArgumentError, "Unknown element: '#{elem}'" )

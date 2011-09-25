@@ -39,11 +39,12 @@
 module MazeAlgorithms
   module Generation
     class EllersAlgorithm
-      attr_reader :union_find, :result
+      attr_reader :union_find, :resulting_maze
+
       def initialize(size)
         @size = size
-        @result = Maze.new(size, 1)
-        @union_find = UnionFind.new(0...size)
+        @resulting_maze = Maze.new(size, 1)
+        @uf = UnionFind.new(0...size)
       end
 
       # Central generate method, same for every algorithm
@@ -53,7 +54,7 @@ module MazeAlgorithms
       #
       # @return [Maze] Returns the generated Maze
       def self.generate(width, height, &blk)
-        new(width).step(height, &blk).result
+        new(width).step(height, &blk).resulting_maze
       end
 
       # The necessary operations for one row are performed N times
@@ -62,16 +63,18 @@ module MazeAlgorithms
       def step(n=10, &blk)
         (n-1).times do
           random_join
-          yield @result if block_given?
+          yield resulting_maze if block_given?
 
           vertical_connections
-          yield @result if block_given?
+          yield resulting_maze if block_given?
         end
         final_row
-        yield @result if block_given?
+        yield resulting_maze if block_given?
 
         self
       end
+
+      private
 
       # Step 1
       # Traverses the row from left to right pairwise,
@@ -85,19 +88,17 @@ module MazeAlgorithms
       # Step 2
       # randomly reassigns cells and carves the walls between rows
       def vertical_connections
-        connected_row = Maze.new(@result.width, 1)
-        @result << connected_row
+        resulting_maze << Maze.new(@size, 1)
 
-        changed_cells = []
-        @union_find.each_set do |set_of_cells|
-          amnt_cells = rand(set_of_cells.size)+1
-          randomly_chosen_cells = set_of_cells.sort_by {rand}.take(amnt_cells)
-          randomly_chosen_cells.each do |cell|
-            @result.carve_wall([cell,-1],[cell,-2])
-            changed_cells << cell
+        carved = (0...@size).group_by { |key| @uf.find(key) }.values.inject([]) do |changed, soc| # soc = set of cells
+          soc.shuffle[0,1+rand(soc.size)].each do |cell|
+            resulting_maze.carve_wall([cell,-1],[cell,-2])
+            changed << cell
           end
+          changed
         end
-        (@union_find.elements-changed_cells).each { |c| @union_find.reassign(c) }
+
+        ( (0...@size).to_a - carved ).each { |c| @uf.reassign(c) }
 
         self
       end
@@ -119,25 +120,16 @@ module MazeAlgorithms
       #
       # @return self
       def union_disjoint_sets_carve_wall(opt = { skip_probability: [true, false] } )
-        (0...@result.width).each_cons(2) do |cell_1, cell_2|
+        (0...@size).each_cons(2) do |cell_1, cell_2|
           next if opt[:skip_probability].sample
 
-          if @union_find.find(cell_1) != @union_find.find(cell_2)
-            @union_find.union(cell_1, cell_2)
-            @result.carve_wall([cell_1,-1],[cell_2,-1])
+          if @uf.find(cell_1) != @uf.find(cell_2)
+            @uf.union(cell_1, cell_2)
+            resulting_maze.carve_wall([cell_1,-1],[cell_2,-1])
           end
         end
 
         self
-      end
-
-      # Randomly choose one of the elements of args
-      #
-      # @param args [variable args] the args to choose from
-      #
-      # @return a random chosen element from args
-      def coin(*args)
-        args.sample
       end
 
     end
