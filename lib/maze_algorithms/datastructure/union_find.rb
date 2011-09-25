@@ -24,7 +24,6 @@ module MazeAlgorithms
     end
 
     class UnionFind
-      attr_reader :set2elems
       def initialize(elems)
         @elem2node = {}
 
@@ -37,8 +36,7 @@ module MazeAlgorithms
       # Example:
       #   union(set1, set2) # => set1 contains (set1 union set2), set2 is DELETED
       def union(target, source)
-        check_present(target, source)
-        @elem2node[source].connect(@elem2node[target])
+        checked_get_node(source).connect(checked_get_node(target))
 
         self
       end
@@ -54,16 +52,14 @@ module MazeAlgorithms
       #   nodes would point from hash to the wrong node which has wrong connections and
       #   therefore a not perfect maze as consequence
       def find(elem)
-        if elem.class != Node then
-          elem_node = @elem2node[elem]
-        else
+        if elem.class == Node then
           elem_node = elem
+        else
+          elem_node = checked_get_node(elem)
         end
 
-        raise ArgumentError, "Unknown element: #{elem}" unless elem_node
-
         if elem_node.parent
-          elem_node.parent = find(elem_node.parent)
+          elem_node.parent = find(elem_node.parent) #path compression
         else
           return elem_node
         end
@@ -71,16 +67,10 @@ module MazeAlgorithms
         return elem_node.parent
       end
 
-      def reassign(elem)
-        unless @elem2node[elem]
-          raise ArgumentError, "Element not found: #{elem}"
-        end
+      def reassign(key)
+        checked_get_node(key)
 
-        @elem2node[elem] = get_new_set(elem)
-      end
-
-      def get_new_set(elem)
-        Node.new(elem)
+        @elem2node[key] = Node.new(key)
       end
 
       def elements
@@ -110,13 +100,16 @@ module MazeAlgorithms
 
       private
 
-      def check_present(*elems)
-        elems.each do |elem|
-          raise ArgumentError, "Unknown element: '#{elem}'" unless @elem2node[elem]
-        end
+      # Iterates over every item and therefore compresses all paths
+      # NOTE that normally this is done passively when using find(<key<)
+      def compress
+        @elem2node.each_key { |key| find(key) }
+      end
 
-        elems
+      def checked_get_node(elem)
+        @elem2node[elem] || ( raise ArgumentError, "Unknown element: '#{elem}'" )
       end
     end
+
   end
 end
