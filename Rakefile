@@ -2,22 +2,15 @@ require 'rake'
 require 'rspec/core/rake_task'
 require 'rake/testtask'
 
-task :default => [:ctags, :test_all]
+task :default => [:ctags, :spec]
 
 desc "Run Rspecs"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  #ruby_opts = "-w" TODO how to enable warings?
-end
+RSpec::Core::RakeTask.new(:spec)
 
 desc "Run the unit tests in test/unit"
 Rake::TestTask.new('test') do |t|
   t.pattern = 'test/**/*_test.rb'
   t.warning = true
-end
-
-desc "Test Rspec and Unit"
-task :test_all => [:test, :spec] do
-  #nothing
 end
 
 desc "Tag files for vim"
@@ -31,6 +24,11 @@ task :bench do
   Dir.glob("**/*_bm.rb").each do |bm|
     puts "Benchmarking: '#{bm}'"
     system "ruby #{bm}"
-    puts "-"*80
+    puts "="*80
   end
+end
+
+desc "Look for TODO and FIXME tags in the code"
+task :todo do
+  FileList['**/*.rb'].egrep(/#.*(FIXME|TODO|NOTE)/)
 end
