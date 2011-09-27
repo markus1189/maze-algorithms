@@ -92,6 +92,18 @@ module MazeAlgorithms
         @grid[y][x] != 0
       end
 
+      def is_perfect?
+        self.inject(true) do |mem, cell_ary|
+          return false unless mem
+
+          cell, x, y= *cell_ary
+
+          neighbours(x,y).reject do |nb|
+            has_wall_between?([x,y], nb)
+          end.size > 0 && mem
+        end
+      end
+
       def has_wall_between?(p1, p2)
         dir = calc_dir(p1, p2)
 
