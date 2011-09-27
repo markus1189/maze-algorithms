@@ -26,12 +26,6 @@ describe "Maze" do
       @maze.calc_dir([-5,-5],[-4,-5]).should eq(:E)
     end
 
-    it "should raise an error if the points are not neighbours or invalid" do
-      pending("disabled for performance")
-      expect { @maze.calc_dir([5,5],[0,0]) }.to raise_error( RuntimeError, /adjacent/)
-      expect { @maze.calc_dir([-5,-5],[0,0]) }.to raise_error( RuntimeError, /Invalid coords/)
-    end
-
   end
 
   context "when move_coords used" do
@@ -51,22 +45,6 @@ describe "Maze" do
       @maze.move_coords(19,9, :S).should be_nil
     end
 
-  end
-
-  context "when using carve_wall" do
-    it "should raise an error if not possible" do
-      pending("disabled for performance")
-      expect { @maze.carve_wall([0,0], [0,-1]) }.to raise_error( RuntimeError, /Invalid coords/ )
-      expect { @maze.carve_wall([0,0], [0, 5]) }.to raise_error( RuntimeError, /adjacent/ )
-
-      @maze.should have_wall_between([0,0],[0,1])
-      @maze.carve_wall([0,0],[0,1])
-      @maze.should_not have_wall_between([0,0],[0,1])
-
-      @maze.should have_wall_between([5,5],[5,4])
-      @maze.carve_wall([5,5],[5,4])
-      @maze.should_not have_wall_between([5,5],[5,4])
-    end
   end
 
   context "when using [] operator" do
