@@ -110,7 +110,8 @@ describe "Maze" do
   context "when trying to get neighbours" do
     it "should return coords for all directions if the position allows it" do
       maze = Maze.new(5, 5)
-      maze.neighbours(2,2).size.should == Maze::MOVES.keys.size
+      keys = Maze::MOVES.keys.size
+      maze.should have(keys).neighbours(2,2)
     end
 
     it "should only return the possible neighbours" do
@@ -118,9 +119,27 @@ describe "Maze" do
       maze.neighbours(0,0).size.should < Maze::MOVES.keys.size
 
       maze = Maze.new(1, 1)
-      maze.neighbours(0,0).size.should == 0
+      maze.should have(0).neighbours(0,0)
     end
 
+  end
+
+  context "when editing walls" do
+    before(:each) do
+      @maze1 = Maze.new(5,5)
+    end
+
+    it "should be able to carve and add walls" do
+      [[[0,0],[0,1]], [[3,3],[2,3]]].each do |edge|
+        @maze1.should have_wall_between(*edge)
+        @maze1.carve_wall(*edge)
+        @maze1.should_not have_wall_between(*edge)
+        @maze1.add_wall(*edge)
+        @maze1.should have_wall_between(*edge)
+      end
+    end
+
+    it "should not be able to add/carve walls to the outside"
   end
 
 end

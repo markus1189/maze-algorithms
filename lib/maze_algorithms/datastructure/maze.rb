@@ -26,13 +26,13 @@ module MazeAlgorithms
         :E => :W
       }
 
-      def initialize(width, height, walls=:all)
+      def initialize(width, height, walls=:with_walls)
         @width, @height = width, height
         @special_fields = {}
 
         wall_val = case walls
-        when :all then 0
-        when :none then FLAGS.values.inject(:|)
+        when :with_walls then 0
+        when :without_walls then FLAGS.values.inject(:|)
         else raise ArgumentError, "walls has to be in [:all, :none], given: #{walls}"
         end
 
@@ -48,10 +48,10 @@ module MazeAlgorithms
       # Example:
       #   carve_wall([3,3],[3,4]) # => nil
       def carve_wall(from, to)
+        direction = calc_dir(from, to)
+
         from_x, from_y = *from
         to_x, to_y     = *to
-
-        direction = calc_dir(from, to)
 
         self[from_x, from_y] |= FLAGS[direction]
         self[to_x, to_y]     |= FLAGS[OPPOSITE[direction]]
@@ -59,6 +59,19 @@ module MazeAlgorithms
         self
       end
       alias_method :connect, :carve_wall
+
+      def add_wall(from, to)
+        direction = calc_dir(from, to)
+
+        from_x, from_y = *from
+        to_x, to_y     = *to
+
+        self[from_x, from_y] ^= FLAGS[direction]
+        self[to_x, to_y]     ^= FLAGS[OPPOSITE[direction]]
+
+        self
+      end
+      alias_method :disconnect, :add_wall
 
       # Given two points, determines the necessary direction to get from the first to the second
       # from and two should be ARRAYS
@@ -87,11 +100,18 @@ module MazeAlgorithms
       #   move_coords(3,4, :E) # => [4,4]
       #   move_coords(2,1, :S) # => [2,2]
       def move_coords(x, y, direction)
-        nx, ny = [x,y].zip(MOVES[direction]).map { |p| p.inject { |m,v| m+v } }
-        return nx, ny if valid_coords?(nx, ny)
+        case direction
+        when :N then nx = x   ; ny = y-1
+        when :S then nx = x   ; ny = y+1
+        when :W then nx = x-1 ; ny = y
+        when :E then nx = x+1 ; ny = y
+        else raise "unknown direction: #{direction}"
+        end
+
+        return nx, ny if valid_coord?(nx, ny)
       end
 
-      def valid_coords?(x, y)
+      def valid_coord?(x,y)
         (x >= 0 && x < @width) && (y >= 0 && y < @height)
       end
 
@@ -129,7 +149,7 @@ module MazeAlgorithms
         (self[x,y] & FLAGS[dir]).zero?
       end
 
-      def neighbours(x, y)
+      def neighbours(x, y, &blk)
         MOVES.keys.inject([]) { |mem,dir| mem << move_coords(x,y,dir) }.compact
       end
 
@@ -198,12 +218,14 @@ module MazeAlgorithms
           sibling.instance_variable_set(ivar, new_value)
         end
         sibling.taint if tainted?
+
         sibling
       end
 
       def clone
         sibling = dup
         sibling.freeze if frozen?
+
         sibling
       end
 
