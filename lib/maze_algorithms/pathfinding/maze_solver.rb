@@ -34,20 +34,23 @@ module MazeAlgorithms
 
       end
 
-      maze.path = generate_path(preds, target)
+      maze.special_fields = generate_path(preds, target)
       maze
     end
 
     private
 
     def self.generate_path(preds, target)
-      path = [target]
+      path = {symbol: '*'}
+
+      path[target] = path[:symbol]
 
       curr = target
       while pred=preds[curr][0]
-        path.unshift(pred)
+        path[pred] = path[:symbol]
         curr = pred
       end
+
       path
     end
   end

@@ -7,9 +7,16 @@ describe "Maze" do
     @maze = Maze.new(20, 10)
   end
 
-  it "should have the given width and height" do
-    @maze.width.should eq(20)
-    @maze.height.should eq(10)
+  context "fresh after init" do
+    it "should have the given width and height" do
+      @maze.width.should eq(20)
+      @maze.height.should eq(10)
+    end
+
+    specify { @maze.should_not be_solvable }
+
+    specify { @maze.should have_wall_at(0,0, :S)}
+    specify { @maze.should have_wall_at(0,0, :E)}
   end
 
   context "when using calc_dir" do
@@ -68,20 +75,6 @@ describe "Maze" do
 
   end
 
-  context "when using []= operator" do
-    it "should be able to set values" do
-      @maze[0,0] = 5
-      @maze[0,0].should eq(5)
-
-      @maze[0,0] += 3
-      @maze[0,0].should eq(8)
-
-      @maze[0,0] &= 0
-      @maze[0,0].should eq(0)
-
-    end
-  end
-
   context "when comparing and combining mazes" do
     it "should be comparable to other mazes via ==" do
       maze1 = Maze.new(5,5)
@@ -93,6 +86,9 @@ describe "Maze" do
 
       maze1.should_not eq(maze3)
       maze2.should_not eq(maze3)
+
+      maze1.should_not eq(1)
+      maze1.should_not eq("1")
     end
 
     it "should append the second maze below the first using merge!" do

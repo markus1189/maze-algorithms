@@ -3,7 +3,7 @@ module MazeAlgorithms
     class Maze
       include Enumerable
       attr_reader :width, :height
-      attr_accessor :path
+      attr_accessor :special_fields
 
       FLAGS = {
         :N => 1,
@@ -26,10 +26,17 @@ module MazeAlgorithms
         :E => :W
       }
 
-      def initialize(width, height)
+      def initialize(width, height, walls=:all)
         @width, @height = width, height
-        @path = []
-        @grid = Array.new(@height) { Array.new(@width, 0) }
+        @special_fields = {}
+
+        wall_val = case walls
+        when :all then 0
+        when :none then FLAGS.values.inject(:|)
+        else raise ArgumentError, "walls has to be in [:all, :none], given: #{walls}"
+        end
+
+        @grid = Array.new(@height) { Array.new(@width, wall_val) }
       end
 
       def directions
@@ -46,8 +53,8 @@ module MazeAlgorithms
 
         direction = calc_dir(from, to)
 
-        @grid[from_y][from_x] |= FLAGS[direction]
-        @grid[to_y][to_x]     |= FLAGS[OPPOSITE[direction]]
+        self[from_x, from_y] |= FLAGS[direction]
+        self[to_x, to_y]     |= FLAGS[OPPOSITE[direction]]
 
         self
       end
@@ -89,28 +96,37 @@ module MazeAlgorithms
       end
 
       def visited?(x, y)
-        @grid[y][x] != 0
+        not self[x,y].zero?
       end
 
-      def is_perfect?
-        self.inject(true) do |mem, cell_ary|
-          return false unless mem
+      # Test if every cell is reachable
+      # (simple bfs)
+      def solvable?
+        start = [@width/2, @height/2]
+        visited = Set.new([start])
+        queue = [start]
 
-          cell, x, y= *cell_ary
-
-          neighbours(x,y).reject do |nb|
-            has_wall_between?([x,y], nb)
-          end.size > 0 && mem
+        until queue.empty?
+          current = queue.pop
+          neighbours(*current).reject do |nb|
+            has_wall_between?(current, nb)
+          end.each do |nb|
+            queue << nb unless visited.include? nb
+            visited << nb
+          end
         end
+
+        visited.size == @width*@height
       end
 
       def has_wall_between?(p1, p2)
         dir = calc_dir(p1, p2)
 
-        from_p1 = @grid[p1[1]][p1[0]] & FLAGS[dir]
-        from_p2 = @grid[p2[1]][p2[0]] & FLAGS[OPPOSITE[dir]]
+        has_wall_at?(*p1, dir) && has_wall_at?(*p2, OPPOSITE[dir])
+      end
 
-        return from_p1 == 0 && from_p2 == 0
+      def has_wall_at?(x,y,dir)
+        (self[x,y] & FLAGS[dir]).zero?
       end
 
       def neighbours(x, y)
@@ -120,21 +136,19 @@ module MazeAlgorithms
       def to_s
         result = ''
         result << "\n"
+
         @height.times do |y|
           @width.times do |x|
-            result << '+' << ((@grid[y][x] & FLAGS[:N] == 0) ? '---' : '   ')
+            result << '+' << ((has_wall_at?(x,y,:N) || y == 0) ? '---' : '   ')
           end
           result << "+\n"
           @width.times do |x|
-            if x == 0
-              result << '|'
-            else
-              result << ((@grid[y][x] & FLAGS[:W] == 0) ? '|' : ' ')
-            end
-            result << (@path.include?([x,y]) ? ' * ' : '   ')
+            result << ((has_wall_at?(x,y,:W) || x == 0) ? '|' : ' ')
+            result << (@special_fields[[x,y]] ? " #{@special_fields[:symbol]} " : '   ')
           end
           result << "|\n"
         end
+
         result << ('+---' * @width) + "+\n"
       end
       alias_method :to_str, :to_s
@@ -147,23 +161,11 @@ module MazeAlgorithms
         end
       end
 
-      def get_row(y)
-        return @grid[y]
-      end
-
-      def area
-        @area ||= @width*@height
-      end
-
       def [](x, y)
-        x > 0 ? x : @width  + x
-        y > 0 ? y : @height + y
         @grid[y][x]
       end
 
-      def []=(x,y,value)
-        x > 0 ? x : @width  + x
-        y > 0 ? y : @height + y
+      def []=(x, y, value)
         @grid[y][x] = value
       end
 
@@ -171,9 +173,7 @@ module MazeAlgorithms
         raise ArgumentError, "Can only add another maze" unless other_maze.class == Maze
         raise ArgumentError, "The mazes must have the same width" unless other_maze.width == width
 
-        other_maze.each_row do |row|
-          @grid << row.clone
-        end
+        other_maze.each_row { |row| @grid << row.clone }
 
         @height += other_maze.height
 
@@ -182,23 +182,29 @@ module MazeAlgorithms
       alias_method :<<, :merge!
 
       def ==(other)
-        return false if other.class != self.class
-        return false if @width  != other.width
-        return false if @height != other.height
+        result = other.class == self.class
+        result &&= @width == other.width
+        result &&= @height == other.height
+        result &&= self.all? { |cell, x, y| other[x,y] == cell }
 
-        self.each do |cell, x, y|
-          return false if (other[x,y] != cell)
+        result
+      end
+
+      def dup
+        sibling = self.class.new(@width, @height)
+        instance_variables.each do |ivar|
+          value = self.instance_variable_get(ivar)
+          new_value = value.clone rescue value
+          sibling.instance_variable_set(ivar, new_value)
         end
-
-        true
+        sibling.taint if tainted?
+        sibling
       end
 
       def clone
-        a_clone = self.class.new(@width, @height)
-        self.each { |cell, x, y| a_clone[x,y] = cell }
-        a_clone.path = @path.clone if @path
-
-        a_clone
+        sibling = dup
+        sibling.freeze if frozen?
+        sibling
       end
 
       def each(&blk)

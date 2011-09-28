@@ -76,4 +76,4 @@ maze = MazeSolver.solve(maze, *opt[:solve]) if opt[:solve]
 
 p maze unless opt[:visual]
 
-puts "Algorithm: #{algorithms[opt[:algo]]}, Size: #{opt[:width]}x#{opt[:height]}, Seed: #{opt[:seed]}, Perfect? #{maze.is_perfect? ? 'yes!' : 'NO!'}"
+puts "Algorithm: #{algorithms[opt[:algo]]}, Size: #{opt[:width]}x#{opt[:height]}, Seed: #{opt[:seed]}, Solvable? #{maze.solvable? ? 'yes!' : 'NO!'}"
