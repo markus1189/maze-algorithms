@@ -7,13 +7,13 @@ task :default => [:ctags, :spec]
 desc "Run Rspecs"
 RSpec::Core::RakeTask.new(:spec)
 
-desc "Run the unit tests in test/unit"
+desc "Run unit tests"
 Rake::TestTask.new('test') do |t|
   t.pattern = 'test/**/*_test.rb'
   t.warning = true
 end
 
-desc "Tag files for vim"
+desc "Create the ctags files for vim"
 task :ctags do
   system "ctags -R *"
 end
